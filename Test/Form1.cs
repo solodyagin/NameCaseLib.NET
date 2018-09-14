@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Reflection;
+using System.Linq;
+using NameCaseLib.Core;
+using NameCaseLib.NCL;
 
 namespace Test
 {
@@ -14,15 +19,28 @@ namespace Test
 		{
 			if (!string.IsNullOrWhiteSpace(comboBox1.Text))
 			{
-				listBox1.Items.Clear();
+				textBox1.Clear();
+				textBox1.AppendText(string.Format("Версия библиотеки: {0}\r\n", Core.Version));
+				textBox1.AppendText("\r\n");
 
 				NameCaseLib.Ru ru = new NameCaseLib.Ru();
-				listBox1.Items.Add("Именительный  (кто? что?): " + ru.Q(comboBox1.Text, NameCaseLib.NCL.Padeg.IMENITLN));
-				listBox1.Items.Add("Родительный (кого? чего?): " + ru.Q(comboBox1.Text, NameCaseLib.NCL.Padeg.RODITLN));
-				listBox1.Items.Add("Дательный   (кому? чему?): " + ru.Q(comboBox1.Text, NameCaseLib.NCL.Padeg.DATELN));
-				listBox1.Items.Add("Винительный  (кого? что?): " + ru.Q(comboBox1.Text, NameCaseLib.NCL.Padeg.VINITELN));
-				listBox1.Items.Add("Творительный  (кем? чем?): " + ru.Q(comboBox1.Text, NameCaseLib.NCL.Padeg.TVORITELN));
-				listBox1.Items.Add("Предложны (о ком? о чём?): " + ru.Q(comboBox1.Text, NameCaseLib.NCL.Padeg.PREDLOGN));
+				string[] m = ru.Q(comboBox1.Text);
+				WordArray wa = ru.GetWordsArray();
+				textBox1.AppendText(string.Format("Фамилия:  {0}\r\n", wa.GetByFioPart(FioPart.SurName).Value));
+				textBox1.AppendText(string.Format("Имя:      {0}\r\n", wa.GetByFioPart(FioPart.Name).Value));
+				textBox1.AppendText(string.Format("Отчество: {0}\r\n", wa.GetByFioPart(FioPart.PatrName).Value));
+				textBox1.AppendText("\r\n");
+
+				textBox1.AppendText(string.Format("Пол: {0}\r\n", ru.GenderAutoDetect().GetDescription()));
+				textBox1.AppendText("\r\n");
+
+				textBox1.AppendText("Падежи:\r\n");
+				textBox1.AppendText(string.Format(" Именительный  (кто? что?): {0}\r\n", m[0]));
+				textBox1.AppendText(string.Format(" Родительный (кого? чего?): {0}\r\n", m[1]));
+				textBox1.AppendText(string.Format(" Дательный   (кому? чему?): {0}\r\n", m[2]));
+				textBox1.AppendText(string.Format(" Винительный  (кого? что?): {0}\r\n", m[3]));
+				textBox1.AppendText(string.Format(" Творительный  (кем? чем?): {0}\r\n", m[4]));
+				textBox1.AppendText(string.Format(" Предложны (о ком? о чём?): {0}\r\n", m[5]));
 			}
 		}
 
@@ -32,6 +50,19 @@ namespace Test
 			{
 				button1.PerformClick();
 			}
+		}
+	}
+
+	public static class EnumExtensions
+	{
+		public static string GetDescription(this Enum value)
+		{
+			return value
+				.GetType()
+				.GetMember(value.ToString())
+				.FirstOrDefault()
+				?.GetCustomAttribute<DescriptionAttribute>()
+				?.Description;
 		}
 	}
 }

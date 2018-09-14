@@ -1,8 +1,8 @@
 ﻿namespace NameCaseLib.NCL
 {
-    enum LettersMask
-    {
-        x,
-        X
-    }
+	enum LettersMask
+	{
+		x,
+		X
+	}
 }

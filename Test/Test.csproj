@@ -102,9 +102,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\NameCaseLib\NameCaseLib.csproj">
       <Project>{ad959283-7562-491c-a23a-c94f96b6c6f2}</Project>
       <Name>NameCaseLib</Name>

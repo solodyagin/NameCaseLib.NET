@@ -1,21 +1,26 @@
-﻿namespace NameCaseLib.NCL
+﻿using System.ComponentModel;
+
+namespace NameCaseLib.NCL
 {
-    /// <summary>
-    /// Перечеслиние пола человека
-    /// </summary>
-    public enum Gender
-    {
-        /// <summary>
-        /// Пол не определен
-        /// </summary>
-        Null = 0,
-        /// <summary>
-        /// Мужской пол
-        /// </summary>
-        Man = 1,
-        /// <summary>
-        /// Женский пол
-        /// </summary>
-        Woman = 2
-    }
+	/// <summary>
+	/// Перечисление пола человека
+	/// </summary>
+	public enum Gender
+	{
+		/// <summary>
+		/// Пол не определен
+		/// </summary>
+		[Description("Неопределен")]
+		Null = 0,
+		/// <summary>
+		/// Мужской пол
+		/// </summary>
+		[Description("Мужской")]
+		Man = 1,
+		/// <summary>
+		/// Женский пол
+		/// </summary>
+		[Description("Женский")]
+		Woman = 2
+	}
 }
