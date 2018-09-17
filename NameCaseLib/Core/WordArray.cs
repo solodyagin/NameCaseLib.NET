@@ -1,7 +1,6 @@
-﻿using NameCaseLib.NCL;
-using System;
+﻿using System;
 
-namespace NameCaseLib.Core
+namespace NameCaseLib
 {
 	/// <summary>
 	/// Класс для создания динамического массива слов

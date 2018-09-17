@@ -1,6 +1,4 @@
-﻿using NameCaseLib.NCL;
-using NameCaseLib.Core;
-using System;
+﻿using System;
 
 namespace NameCaseLib
 {
@@ -9,7 +7,7 @@ namespace NameCaseLib
 	/// Правила определения пола человека по ФИО для украинского языка
 	/// Система разделения фамилий имен и отчеств для украинского языка 
 	/// </summary>
-	public class Ua : NameCaseLib.Core.Core
+	public class Ua : NameCaseLib.Core
 	{
 		/// <summary>
 		/// Версия языкового файла

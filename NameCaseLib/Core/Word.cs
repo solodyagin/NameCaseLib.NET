@@ -1,6 +1,4 @@
-﻿using NameCaseLib.NCL;
-
-namespace NameCaseLib.Core
+﻿namespace NameCaseLib
 {
 	/// <summary>
 	/// Word - класс, который служит для хранения всей информации о каждом слове
@@ -52,13 +50,18 @@ namespace NameCaseLib.Core
 		public int Rule { get; set; } = 0;
 
 		/// <summary>
+		/// Номер позиции слова в ФИО
+		/// </summary>
+		public int Position = 1;
+
+		/// <summary>
 		/// Создание нового обьекта со словом
 		/// </summary>
-		/// <param name="word">Слово</param>
-		public Word(string word)
+		/// <param name="value">Слово</param>
+		public Word(string value)
 		{
-			GenerateMask(word);
-			this.Value = word.ToLower();
+			GenerateMask(value);
+			this.Value = value.ToLower();
 		}
 
 		/// <summary>

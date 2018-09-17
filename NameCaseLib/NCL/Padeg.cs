@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace NameCaseLib.NCL
+namespace NameCaseLib
 {
 	/// <summary>
 	/// Содержит перечисление падежей русского и украинского языков

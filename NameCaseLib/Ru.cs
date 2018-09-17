@@ -1,6 +1,4 @@
-﻿using NameCaseLib.NCL;
-using NameCaseLib.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace NameCaseLib
@@ -10,7 +8,7 @@ namespace NameCaseLib
 	/// Правила определения пола по ФИО для русского языка
 	/// Система разделения фамилий, имен и отчеств для русского языка
 	/// </summary>
-	public class Ru : NameCaseLib.Core.Core
+	public class Ru : NameCaseLib.Core
 	{
 		/// <summary>
 		/// Версия языкового файла
@@ -464,8 +462,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Функция пытается применить цепочку правил для мужских имен
-		/// @return boolean true - если было использовано правило из списка, false - если правило не найдено
 		/// </summary>
+		/// <returns>true - если было использовано правило из списка, false - если правило не найдено</returns>
 		protected override bool ManName()
 		{
 			return RulesChain(Gender.Man, new int[] { 1, 2, 3 });
@@ -473,8 +471,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Функция пытается применить цепочку правил для женских имен
-		/// @return boolean true - если было использовано правило из списка, false - если правило не найдено
 		/// </summary>
+		/// <returns>true - если было использовано правило из списка, false - если правило не найдено</returns>
 		protected override bool WomanName()
 		{
 			return RulesChain(Gender.Woman, new int[] { 1, 2, 3 });
@@ -482,8 +480,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Функция пытается применить цепочку правил для мужских фамилий
-		/// @return boolean true - если было использовано правило из списка, false - если правило не найдено
 		/// </summary>
+		/// <returns>true - если было использовано правило из списка, false - если правило не найдено</returns>
 		protected override bool ManSurName()
 		{
 			return RulesChain(Gender.Man, new int[] { 8, 4, 5, 6, 7 });
@@ -491,8 +489,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Функция пытается применить цепочку правил для женских фамилий
-		/// @return boolean true - если было использовано правило из списка, false - если правило не найдено
 		/// </summary>
+		/// <returns>true - если было использовано правило из списка, false - если правило не найдено</returns>
 		protected override bool WomanSurName()
 		{
 			return RulesChain(Gender.Woman, new int[] { 4 });
@@ -500,8 +498,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Функция склоняет мужские отчества
-		/// @return boolean true - если слово было успешно изменено, false - если не получилось этого сделать
 		/// </summary>
+		/// <returns>true - если слово было успешно изменено, false - если не получилось этого сделать</returns>
 		protected override bool ManPatrName()
 		{
 			// Проверяем: действительно ли отчество?
@@ -520,8 +518,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Функция склоняет женские отчества
-		/// @return boolean true - если слово было успешно изменено, false - если не получилось этого сделать
 		/// </summary>
+		/// <returns>true - если слово было успешно изменено, false - если не получилось этого сделать</returns>
 		protected override bool WomanPatrName()
 		{
 			// Проверяем: действительно ли отчество?
@@ -533,11 +531,10 @@ namespace NameCaseLib
 			return false;
 		}
 
-
 		/// <summary>
 		/// Определение пола по правилам имен
-		/// @param NCLNameCaseWord word обьект класса слов, для которого нужно определить пол
 		/// </summary>
+		/// <param name="word">обьект класса слов, для которого нужно определить пол</param>
 		protected override void GenderByName(Word word)
 		{
 			SetWorkingWord(word.Value);
@@ -603,8 +600,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Определение пола по правилам фамилий
-		/// @param NCLNameCaseWord word обьект класса слов, для которого нужно определить пол
 		/// </summary>
+		/// <param name="word">обьект класса слов, для которого нужно определить пол</param>
 		protected override void GenderBySurName(Word word)
 		{
 			SetWorkingWord(word.Value);
@@ -631,8 +628,8 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Определение пола по правилам отчеств
-		/// @param NCLNameCaseWord word обьект класса слов, для которого нужно определить пол
 		/// </summary>
+		/// <param name="word">обьект класса слов, для которого нужно определить пол</param>
 		protected override void GenderByPatrName(Word word)
 		{
 			SetWorkingWord(word.Value);
@@ -648,81 +645,58 @@ namespace NameCaseLib
 		}
 
 		/// <summary>
-		/// Идентифицирует чем является слово: именем, фамилией или отчеством
-		/// - <b>N</b> - имя
-		/// - <b>S</b> - фамилия
-		/// - <b>F</b> - отчество
-		/// @param NCLNameCaseWord word обьект класса слов, который необходимо идентифицировать
+		/// Определяет, чем является слово: именем, фамилией или отчеством
 		/// </summary>
+		/// <param name="word">слово, которое необходимо определить</param>
 		protected override void DetectFioPart(Word word)
 		{
-			string name = word.Value;
-			int length = name.Length;
-			SetWorkingWord(name);
+			SetWorkingWord(word.Value);
 
 			// Считаем вероятность
 			float first = 0;
 			float surname = 0;
 			float patr = 0;
 
-			// если смахивает на отчество
-			if (In(Last(3), new string[] { "вна", "чна", "вич", "ьич" }))
-			{
+			// Если смахивает на отчество
+			if (word.Position > 1 && In(Last(3), new string[] { "вна", "чна", "вич", "ьич" }))
 				patr += 3;
-			}
 
 			if (In(Last(2), new string[] { "ша" }))
-			{
 				first += 0.5f;
-			}
 
-			// буквы на которые никогда не заканчиваются имена
+			// Буквы, на которые никогда не заканчиваются имена
 			if (In(Last(1), "еёжхцочшщъыэю"))
-			{
 				surname += 0.3f;
-			}
 
 			// Используем массив характерных окончаний
 			if (In(Last(2, 1), vowels + consonant))
 			{
 				if (!In(Last(1), splitSecondExclude[Last(2, 1)]))
-				{
 					surname += 0.4f;
-				}
 			}
 
 			// Сокращённые ласкательные имена типа Аня, Галя и т.д.
 			if (Last(1) == "я" && In(Last(3, 1), vowels))
-			{
 				first += 0.5f;
-			}
 
 			// Не бывает имен с такими предпоследними буквами
 			if (In(Last(2, 1), "жчщъэю"))
-			{
 				surname += 0.3f;
-			}
 
 			// Слова на мягкий знак. Существует очень мало имен на мягкий знак. Всё остальное фамилии
 			if (Last(1) == "ь")
 			{
 				// Имена типа Нинель, Адель, Асель
 				if (Last(3, 2) == "ел")
-				{
 					first += 0.7f;
-				}
 
 				// Просто исключения
-				else if (InNames(name, new string[] { "лазарь", "игорь", "любовь" }))
-				{
+				else if (InNames(word.Value, new string[] { "лазарь", "игорь", "любовь" }))
 					first += 10;
-				}
 
 				// Если не то и не другое, тогда фамилия
 				else
-				{
 					surname += 0.3f;
-				}
 			}
 
 			// Если две последних букв согласные, то скорее всего это фамилия
@@ -730,42 +704,30 @@ namespace NameCaseLib
 			{
 				// Практически все кроме тех, которые оканчиваются на следующие буквы
 				if (!In(Last(2), new string[] { "др", "кт", "лл", "пп", "рд", "рк", "рп", "рт", "тр" }))
-				{
 					surname += 0.25f;
-				}
 			}
 
 			// Слова, которые оканчиваются на "тин"
 			if (Last(3) == "тин" && In(Last(4, 1), "нст"))
-			{
 				first += 0.5f;
-			}
 
 			// Исключения
-			if (InNames(name, new string[] { "лев", "яков", "маша", "ольга", "еремей", "исак", "исаак", "ева", "ирина", "элькин", "мерлин" }))
-			{
+			if (InNames(word.Value, new string[] { "лев", "яков", "маша", "ольга", "еремей", "исак", "исаак", "ева", "ирина", "элькин", "мерлин" }))
 				first += 10;
-			}
 
 			// Фамилии, оканчивающиеся на "ли" (кроме имён "Натали" и т.д.)
 			if (Last(2) == "ли" && Last(3, 1) != "а")
-			{
 				surname += 0.4f;
-			}
 
 			// Фамилии, оканчивающиеся на "ян" (кроме Касьян, Куприян, Ян и т.д.)
-			if (Last(2) == "ян" && length > 2 && !In(Last(3, 1), "ьи"))
-			{
+			if (Last(2) == "ян" && word.Value.Length > 2 && !In(Last(3, 1), "ьи"))
 				surname += 0.4f;
-			}
 
 			// Фамилии, оканчивающиеся на "ур" (кроме имен Артур, Тимур)
 			if (Last(2) == "ур")
 			{
-				if (!InNames(name, new string[] { "артур", "тимур" }))
-				{
+				if (!InNames(word.Value, new string[] { "артур", "тимур" }))
 					surname += 0.4f;
-				}
 			}
 
 			// Разбор ласкательных имен на "ик"
@@ -773,13 +735,9 @@ namespace NameCaseLib
 			{
 				// Ласкательные буквы перед "ик"
 				if (In(Last(3, 1), "лшхд"))
-				{
 					first += 0.3f;
-				}
 				else
-				{
 					surname += 0.4f;
-				}
 			}
 
 			// Разбор имен и фамилий, оканчивающихся на "ина"
@@ -787,58 +745,39 @@ namespace NameCaseLib
 			{
 				// Все похожие на Катерина и Кристина
 				if (In(Last(7), new string[] { "атерина", "ристина" }))
-				{
 					first += 10;
-				}
 
 				// Исключения
-				else if (InNames(name, new string[] { "мальвина", "антонина", "альбина", "агриппина", "фаина", "карина", "марина", "валентина", "калина", "аделина", "алина", "ангелина", "галина", "каролина", "павлина", "полина", "элина", "мина", "нина" }))
-				{
+				else if (InNames(word.Value, new string[] { "мальвина", "антонина", "альбина", "агриппина", "фаина", "карина", "марина", "валентина", "калина", "аделина", "алина", "ангелина", "галина", "каролина", "павлина", "полина", "элина", "мина", "нина" }))
 					first += 10;
-				}
+
 				// Иначе фамилия
 				else
-				{
 					surname += 0.4f;
-				}
 			}
 
 			// Имена типа Николай
 			if (Last(4) == "олай")
-			{
 				first += 0.6f;
-			}
 
 			// Фамильные окончания
 			if (In(Last(2), new string[] { "ов", "ин", "ев", "ёв", "ый", "ын", "ой", "ук", "як", "ца", "ун", "ок", "ая", "га", "ёк", "ив", "ус", "ак", "яр", "уз", "ах", "ай" }))
-			{
 				surname += 0.4f;
-			}
 
 			if (In(Last(3), new string[] { "ова", "ева", "ёва", "ына", "шен", "мей", "вка", "шир", "бан", "чий", "кий", "бей", "чан", "ган", "ким", "кан", "мар" }))
-			{
 				surname += 0.4f;
-			}
 
 			if (In(Last(4), new string[] { "шена" }))
-			{
 				surname += 0.4f;
-			}
 
 			float max = Math.Max(Math.Max(first, surname), patr);
 
 			if (first == max)
-			{
 				word.FioPart = FioPart.Name;
-			}
 			else if (surname == max)
-			{
 				word.FioPart = FioPart.SurName;
-			}
 			else
-			{
 				word.FioPart = FioPart.PatrName;
-			}
 		}
 	}
 }

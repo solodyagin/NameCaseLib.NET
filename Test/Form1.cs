@@ -3,8 +3,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Reflection;
 using System.Linq;
-using NameCaseLib.Core;
-using NameCaseLib.NCL;
+using NameCaseLib;
 
 namespace Test
 {

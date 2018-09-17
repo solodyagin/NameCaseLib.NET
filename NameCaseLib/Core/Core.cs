@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Reflection;
-using NameCaseLib.NCL;
 
-namespace NameCaseLib.Core
+namespace NameCaseLib
 {
 	/// <summary>
 	/// Базовый класс с набором основных функций
 	/// </summary>
 	public abstract class Core
 	{
-		/// <summary>
-		/// Возвращает текущую версию библиотеки
-		/// </summary>
-		public static string Version { get; } = "0.4.2";
-
 		/// <summary>
 		/// Версия языкового файла
 		/// </summary>
@@ -543,16 +537,15 @@ namespace NameCaseLib.Core
 		/// <param name="fullname">Строка содержащая полное имя</param>
 		private void SplitFullName(string fullname)
 		{
-			string[] arr = fullname.Trim().Split(new Char[] { ' ' });
-			int length = arr.Length;
+			// Удаляем лишние пробелы
+			fullname = System.Text.RegularExpressions.Regex.Replace(fullname.Trim(), @"\s+", " ");
 
+			string[] arr = fullname.Split(new Char[] { ' ' });
+			int length = arr.Length;
 			words = new WordArray();
 			for (int i = 0; i < length; i++)
 			{
-				if (arr[i] != "")
-				{
-					words.AddWord(new Word(arr[i]));
-				}
+				words.AddWord(new Word(arr[i]) { Position = i + 1 });
 			}
 		}
 
@@ -997,6 +990,18 @@ namespace NameCaseLib.Core
 		/// </summary>
 		/// <param name="word">Слово, которое нужно идентифицировать</param>
 		abstract protected void DetectFioPart(Word word);
+
+		/// <summary>
+		/// Возвращает текущую версию библиотеки
+		/// </summary>
+		static public string Version
+		{
+			get
+			{
+				Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+				return ver.ToString();
+			}
+		}
 
 		/// <summary>
 		/// Возвращает текущую версию языкового файла

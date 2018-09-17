@@ -1,4 +1,4 @@
-﻿namespace NameCaseLib.NCL
+﻿namespace NameCaseLib
 {
 	/// <summary>
 	/// Класс который содержит тип данных для определения пола человека
