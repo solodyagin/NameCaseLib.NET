@@ -15,7 +15,7 @@ namespace NameCaseLib
 		/// <summary>
 		/// Версия языкового файла
 		/// </summary>
-		protected new static string languageBuild = "11072716";
+		protected new static string languageBuild = "11072717";
 
 		/// <summary>
 		/// Количество падежей в языке
@@ -397,7 +397,11 @@ namespace NameCaseLib
 				}
 				else
 				{
-					WordForms(workingWord, new string[] { "и", "и", "ю", "ей", "и" }, 1);
+					// Имена: Ия и Лия
+					if (InNames(workingWord, "ия") || InNames(workingWord, "лия"))
+						WordForms(workingWord, new string[] { "и", "е", "ю", "ей", "е" }, 1);
+					else
+						WordForms(workingWord, new string[] { "и", "и", "ю", "ей", "и" }, 1);
 					Rule(202);
 					return true;
 				}
@@ -658,7 +662,7 @@ namespace NameCaseLib
 
 			// Считаем вероятность
 			float first = 0;
-			float second = 0;
+			float surname = 0;
 			float patr = 0;
 
 			// если смахивает на отчество
@@ -675,7 +679,7 @@ namespace NameCaseLib
 			// буквы на которые никогда не заканчиваются имена
 			if (In(Last(1), "еёжхцочшщъыэю"))
 			{
-				second += 0.3f;
+				surname += 0.3f;
 			}
 
 			// Используем массив характерных окончаний
@@ -683,7 +687,7 @@ namespace NameCaseLib
 			{
 				if (!In(Last(1), splitSecondExclude[Last(2, 1)]))
 				{
-					second += 0.4f;
+					surname += 0.4f;
 				}
 			}
 
@@ -696,7 +700,7 @@ namespace NameCaseLib
 			// Не бывает имен с такими предпоследними буквами
 			if (In(Last(2, 1), "жчщъэю"))
 			{
-				second += 0.3f;
+				surname += 0.3f;
 			}
 
 			// Слова на мягкий знак. Существует очень мало имен на мягкий знак. Всё остальное фамилии
@@ -717,7 +721,7 @@ namespace NameCaseLib
 				// Если не то и не другое, тогда фамилия
 				else
 				{
-					second += 0.3f;
+					surname += 0.3f;
 				}
 			}
 
@@ -727,7 +731,7 @@ namespace NameCaseLib
 				// Практически все кроме тех, которые оканчиваются на следующие буквы
 				if (!In(Last(2), new string[] { "др", "кт", "лл", "пп", "рд", "рк", "рп", "рт", "тр" }))
 				{
-					second += 0.25f;
+					surname += 0.25f;
 				}
 			}
 
@@ -746,13 +750,13 @@ namespace NameCaseLib
 			// Фамилии, оканчивающиеся на "ли" (кроме имён "Натали" и т.д.)
 			if (Last(2) == "ли" && Last(3, 1) != "а")
 			{
-				second += 0.4f;
+				surname += 0.4f;
 			}
 
 			// Фамилии, оканчивающиеся на "ян" (кроме Касьян, Куприян, Ян и т.д.)
 			if (Last(2) == "ян" && length > 2 && !In(Last(3, 1), "ьи"))
 			{
-				second += 0.4f;
+				surname += 0.4f;
 			}
 
 			// Фамилии, оканчивающиеся на "ур" (кроме имен Артур, Тимур)
@@ -760,7 +764,7 @@ namespace NameCaseLib
 			{
 				if (!InNames(name, new string[] { "артур", "тимур" }))
 				{
-					second += 0.4f;
+					surname += 0.4f;
 				}
 			}
 
@@ -774,7 +778,7 @@ namespace NameCaseLib
 				}
 				else
 				{
-					second += 0.4f;
+					surname += 0.4f;
 				}
 			}
 
@@ -795,7 +799,7 @@ namespace NameCaseLib
 				// Иначе фамилия
 				else
 				{
-					second += 0.4f;
+					surname += 0.4f;
 				}
 			}
 
@@ -808,26 +812,26 @@ namespace NameCaseLib
 			// Фамильные окончания
 			if (In(Last(2), new string[] { "ов", "ин", "ев", "ёв", "ый", "ын", "ой", "ук", "як", "ца", "ун", "ок", "ая", "га", "ёк", "ив", "ус", "ак", "яр", "уз", "ах", "ай" }))
 			{
-				second += 0.4f;
+				surname += 0.4f;
 			}
 
 			if (In(Last(3), new string[] { "ова", "ева", "ёва", "ына", "шен", "мей", "вка", "шир", "бан", "чий", "кий", "бей", "чан", "ган", "ким", "кан", "мар" }))
 			{
-				second += 0.4f;
+				surname += 0.4f;
 			}
 
 			if (In(Last(4), new string[] { "шена" }))
 			{
-				second += 0.4f;
+				surname += 0.4f;
 			}
 
-			float max = Math.Max(Math.Max(first, second), patr);
+			float max = Math.Max(Math.Max(first, surname), patr);
 
 			if (first == max)
 			{
 				word.FioPart = FioPart.Name;
 			}
-			else if (second == max)
+			else if (surname == max)
 			{
 				word.FioPart = FioPart.SurName;
 			}

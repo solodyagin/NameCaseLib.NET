@@ -35,12 +35,12 @@ namespace Test
 				textBox1.AppendText("\r\n");
 
 				textBox1.AppendText("Падежи:\r\n");
-				textBox1.AppendText(string.Format(" Именительный  (кто? что?): {0}\r\n", m[0]));
-				textBox1.AppendText(string.Format(" Родительный (кого? чего?): {0}\r\n", m[1]));
-				textBox1.AppendText(string.Format(" Дательный   (кому? чему?): {0}\r\n", m[2]));
-				textBox1.AppendText(string.Format(" Винительный  (кого? что?): {0}\r\n", m[3]));
-				textBox1.AppendText(string.Format(" Творительный  (кем? чем?): {0}\r\n", m[4]));
-				textBox1.AppendText(string.Format(" Предложны (о ком? о чём?): {0}\r\n", m[5]));
+				textBox1.AppendText(string.Format(" Именительный   (кто? что?): {0}\r\n", m[0]));
+				textBox1.AppendText(string.Format(" Родительный  (кого? чего?): {0}\r\n", m[1]));
+				textBox1.AppendText(string.Format(" Дательный    (кому? чему?): {0}\r\n", m[2]));
+				textBox1.AppendText(string.Format(" Винительный   (кого? что?): {0}\r\n", m[3]));
+				textBox1.AppendText(string.Format(" Творительный   (кем? чем?): {0}\r\n", m[4]));
+				textBox1.AppendText(string.Format(" Предложный (о ком? о чём?): {0}\r\n", m[5]));
 			}
 		}
 

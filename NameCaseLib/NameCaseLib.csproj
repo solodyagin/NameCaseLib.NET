@@ -58,7 +58,7 @@
     <Compile Include="NCL\Gender.cs" />
     <Compile Include="NCL\GenderProbability.cs" />
     <Compile Include="NCL\LettersMask.cs" />
-    <Compile Include="NCL\NamePart.cs" />
+    <Compile Include="NCL\FioPart.cs" />
     <Compile Include="NCL\Padeg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
