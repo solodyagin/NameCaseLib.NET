@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace NameCaseLib
 {
@@ -12,7 +13,7 @@ namespace NameCaseLib
 		/// <summary>
 		/// Версия языкового файла
 		/// </summary>
-		public static string LanguageBuild = "20110712-22"; // Формат: ГодМесяцДень-номерИзменения
+		public static string LanguageBuild = "20180918-1"; // Формат: ГодМесяцДень-номерИзменения
 
 		/// <summary>
 		/// Количество падежей в языке
@@ -59,7 +60,7 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Чергування українських приголосних
-		/// Чергування г к х —» з ц с
+		/// Чергування "г", "к", "х" —» "з", "ц", "с"
 		/// <param name="letter">літера, яку необхідно перевірити на чергування</param>
 		/// </summary>
 		/// <returns>літера, де вже відбулося чергування</returns>
@@ -82,9 +83,7 @@ namespace NameCaseLib
 		private bool isApostrof(string letter)
 		{
 			if (In(letter, " " + consonant + vowels))
-			{
 				return false;
-			}
 			return true;
 		}
 
@@ -125,32 +124,24 @@ namespace NameCaseLib
 		{
 			string osnova = word;
 			string stack = "";
-			//Ріжемо слово поки не зустрінемо приголосний і записуемо в стек всі голосні які зустріли
+			// Ріжемо слово поки не зустрінемо приголосний і записуемо в стек всі голосні які зустріли
 			while (In(Last(osnova, 1), vowels + "ь"))
 			{
 				stack = Last(osnova, 1) + stack;
 				osnova = osnova.Substring(0, osnova.Length - 1);
 			}
 			int stacksize = stack.Length;
-			string last = "Z"; //нульове закінчення
+			string last = "Z"; // нульове закінчення
 			if (stacksize > 0)
-			{
 				last = stack.Substring(0, 1);
-			}
 
 			string osnovaEnd = Last(osnova, 1);
 			if (In(osnovaEnd, neshyplyachi) && !In(last, myaki))
-			{
 				return 1;
-			}
 			else if (In(osnovaEnd, shyplyachi) && !In(last, myaki))
-			{
 				return 2;
-			}
 			else
-			{
 				return 3;
-			}
 		}
 
 		/// <summary>
@@ -161,14 +152,11 @@ namespace NameCaseLib
 		/// <returns>Перша літера з кінця</returns>
 		private string FirstLastVowel(string word, string vowels)
 		{
-			int length = word.Length;
-			for (int i = length - 1; i > 0; i--)
+			for (int i = word.Length - 1; i > 0; i--)
 			{
 				string letter = word.Substring(i, 1);
 				if (In(letter, vowels))
-				{
 					return letter;
-				}
 			}
 			return "";
 		}
@@ -181,42 +169,40 @@ namespace NameCaseLib
 		private string getOsnova(string word)
 		{
 			string osnova = word;
-			//Ріжемо слово поки не зустрінемо приголосний
+			// Ріжемо слово поки не зустрінемо приголосний
 			while (In(Last(osnova, 1), vowels + "ь"))
-			{
 				osnova = osnova.Substring(0, osnova.Length - 1);
-			}
 			return osnova;
 		}
 
 		/// <summary>
-		/// Українські чоловічі та жіночі імена, що в називному відмінку однини закінчуються на -а (-я),
+		/// Українські чоловічі та жіночі імена, що в називному відмінку однини закінчуються на "а" ("я"),
 		/// відмінються як відповідні іменники І відміни.
 		/// <ul>
-		/// <li>Примітка 1. Кінцеві приголосні основи г, к, х у жіночих іменах 
-		///   у давальному та місцевому відмінках однини перед закінченням -і 
-		///   змінюються на з, ц, с: Ольга - Ользі, Палажка - Палажці, Солоха - Солосі.</li>
+		/// <li>Примітка 1. Кінцеві приголосні основи "г", "к", "х" у жіночих іменах 
+		///   у давальному та місцевому відмінках однини перед закінченням "і" 
+		///   змінюються на "з", "ц", "с": Ольга - Ользі, Палажка - Палажці, Солоха - Солосі.</li>
 		/// <li>Примітка 2. У жіночих іменах типу Одарка, Параска в родовому відмінку множини 
-		///   в кінці основи між приголосними з"являється звук о: Одарок, Парасок. </li>
+		///   в кінці основи між приголосними з"являється звук "о": Одарок, Парасок. </li>
 		/// </ul>
 		/// </summary>
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns>
 		protected bool ManRule1()
 		{
-			//Предпоследний символ
+			// Предпоследний символ
 			string beforeLast = Last(2, 1);
 
-			//Останні літера або а
+			// Останні літера або "а"
 			if (Last(1) == "а")
 			{
 				WordForms(workingWord, new string[] { beforeLast + "и", inverseGKH(beforeLast) + "і", beforeLast + "у", beforeLast + "ою", inverseGKH(beforeLast) + "і", beforeLast + "о" }, 2);
 				Rule(101);
 				return true;
 			}
-			//Остання літера я
+			// Остання літера "я"
 			else if (Last(1) == "я")
 			{
-				//Перед останньою літерою стоїть я
+				// Перед останньою літерою стоїть я
 				if (beforeLast == "і")
 				{
 					WordForms(workingWord, new string[] { "ї", "ї", "ю", "єю", "ї", "є" }, 1);
@@ -234,7 +220,7 @@ namespace NameCaseLib
 		}
 
 		/// <summary>
-		/// Імена, що в називному відмінку закінчуються на -р, у родовому мають закінчення -а: 
+		/// Імена, що в називному відмінку закінчуються на "р", у родовому мають закінчення "а": 
 		/// Віктор - Віктора, Макар - Макара, але: Ігор - Ігоря, Лазар - Лазаря.
 		/// </summary>
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns>
@@ -250,12 +236,13 @@ namespace NameCaseLib
 				}
 				else
 				{
+					// Сидір
 					string osnova = workingWord;
-					if (Last(osnova, 2, 1) == "і")
-					{
+					// В украинском алфавите букве "і" соответсвует код Юникода = 0x0456
+					if (new[] { Char.ConvertFromUtf32(0x0456), "i" }.Contains(Last(osnova, 2, 1)))
 						osnova = osnova.Substring(0, osnova.Length - 2) + "о" + Last(osnova, 1);
-					}
-					WordForms(osnova, new string[] { "а", "ові", "а", "ом", "ові", "е" });
+					//WordForms(osnova, new string[] { "а", "ові", "а", "ом", "ові", "е" });
+					WordForms(osnova, new string[] { "а", "у", "а", "ом", "і", "е" });
 					Rule(202);
 					return true;
 				}
@@ -264,55 +251,56 @@ namespace NameCaseLib
 		}
 
 		/// <summary>
-		/// Українські чоловічі імена, що в називному відмінку однини закінчуються на приголосний та -о, 
+		/// Українські чоловічі імена, що в називному відмінку однини закінчуються на приголосний та "о", 
 		/// відмінюються як відповідні іменники ІІ відміни.
 		/// </summary>
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns> 
 		protected bool ManRule3()
 		{
-			//Предпоследний символ
+			// Предпоследний символ
 			string beforeLast = Last(2, 1);
 
 			if (In(Last(1), consonant + "оь"))
 			{
 				int group = detect2Group(workingWord);
 				string osnova = getOsnova(workingWord);
-				//В іменах типу Антін, Нестір, Нечипір, Прокіп, Сидір, Тиміш, Федір голосний і виступає тільки в 
-				//називному відмінку, у непрямих - о: Антона, Антонові                           
-				//Чергування і -» о всередині
+				// В іменах типу Антін, Нестір, Нечипір, Прокіп, Сидір, Тиміш, Федір голосний "і" виступає тільки в 
+				// називному відмінку, у непрямих - "о": Антона, Антонові
+				// Чергування "і" -» "о" всередині
 				string osLast = Last(osnova, 1);
 				if (osLast != "й" && Last(osnova, 2, 1) == "і" && !In(Last(osnova, 4), new string[] { "світ", "цвіт" }) && !InNames(workingWord, "гліб") && !In(Last(2), new string[] { "ік", "іч" }))
-				{
 					osnova = osnova.Substring(0, osnova.Length - 2) + "о" + Last(osnova, 1);
-				}
 
-
-				//Випадання букви е при відмінюванні слів типу Орел
-				if (osnova != "" && osnova.Substring(0, 1) == "о" && FirstLastVowel(osnova, vowels + "гк") == "е" && Last(2) != "сь")
+				// Випадання букви "е" при відмінюванні слів типу Орел
+				//if (osnova != "" && osnova.Substring(0, 1) == "о" && FirstLastVowel(osnova, vowels + "гк") == "е" && Last(2) != "сь")
+				//{
+				//	int delim = osnova.LastIndexOf("е");
+				//	osnova = osnova.Substring(0, delim) + osnova.Substring(delim + 1, osnova.Length - delim);
+				//}
+				if (InNames(workingWord, new string[] { "орел" }))
 				{
 					int delim = osnova.LastIndexOf("е");
 					osnova = osnova.Substring(0, delim) + osnova.Substring(delim + 1, osnova.Length - delim);
 				}
 
-
 				if (group == 1)
 				{
-					//Тверда група
-					//Слова що закінчуються на ок
+					// Тверда група
+					// Слова що закінчуються на "ок"
 					if (Last(2) == "ок" && Last(3) != "оок")
 					{
 						WordForms(workingWord, new string[] { "ка", "кові", "ка", "ком", "кові", "че" }, 2);
 						Rule(301);
 						return true;
 					}
-					//Російські прізвища на ов, ев, єв
+					// Російські прізвища на "ов", "ев", "єв"
 					else if (In(Last(2), new string[] { "ов", "ев", "єв" }) && !InNames(workingWord, new string[] { "лев", "остромов" }))
 					{
 						WordForms(osnova, new string[] { osLast + "а", osLast + "у", osLast + "а", osLast + "им", osLast + "у", inverse2(osLast) + "е" }, 1);
 						Rule(302);
 						return true;
 					}
-					//Російські прізвища на ін
+					// Російські прізвища на "ін"
 					else if (In(Last(2), new string[] { "ін" }))
 					{
 						WordForms(workingWord, new string[] { "а", "у", "а", "ом", "у", "е" });
@@ -321,22 +309,23 @@ namespace NameCaseLib
 					}
 					else
 					{
-						WordForms(osnova, new string[] { osLast + "а", osLast + "ові", osLast + "а", osLast + "ом", osLast + "ові", inverse2(osLast) + "е" }, 1);
+						//WordForms(osnova, new string[] { osLast + "а", osLast + "ові", osLast + "а", osLast + "ом", osLast + "ові", inverse2(osLast) + "е" }, 1);
+						WordForms(osnova, new string[] { osLast + "а", osLast + "у", osLast + "а", osLast + "ом", osLast + "і", inverse2(osLast) + "е" }, 1);
 						Rule(304);
 						return true;
 					}
 				}
 				if (group == 2)
 				{
-					//Мішана група
+					// Мішана група
 					WordForms(osnova, new string[] { "а", "еві", "а", "ем", "еві", "е" });
 					Rule(305);
 					return true;
 				}
 				if (group == 3)
 				{
-					//М’яка група
-					//Соловей
+					// М’яка група
+					// Соловей
 					if (Last(2) == "ей" && In(Last(3, 1), gubni))
 					{
 						osnova = workingWord.Substring(0, workingWord.Length - 2) + "’";
@@ -350,21 +339,21 @@ namespace NameCaseLib
 						Rule(307);
 						return true;
 					}
-					//Швець
+					// Швець
 					else if (workingWord == "швець")
 					{
 						WordForms(workingWord, new string[] { "евця", "евцеві", "евця", "евцем", "евцеві", "евцю" }, 4);
 						Rule(308);
 						return true;
 					}
-					//Слова що закінчуються на ець
+					// Слова що закінчуються на "ець"
 					else if (Last(3) == "ець")
 					{
 						WordForms(workingWord, new string[] { "ця", "цеві", "ця", "цем", "цеві", "цю" }, 3);
 						Rule(309);
 						return true;
 					}
-					//Слова що закінчуються на єць яць
+					// Слова що закінчуються на "єць", "яць"
 					else if (In(Last(3), new string[] { "єць", "яць" }))
 					{
 						WordForms(workingWord, new string[] { "йця", "йцеві", "йця", "йцем", "йцеві", "йцю" }, 3);
@@ -383,7 +372,7 @@ namespace NameCaseLib
 		}
 
 		/// <summary>
-		/// Якщо слово закінчується на і, то відмінюємо як множину
+		/// Якщо слово закінчується на "і", то відмінюємо як множину
 		/// </summary>
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns>
 		protected bool ManRule4()
@@ -398,7 +387,7 @@ namespace NameCaseLib
 		}
 
 		/// <summary>
-		/// Якщо слово закінчується на ий або ой
+		/// Якщо слово закінчується на "ий" або "ой"
 		/// </summary>
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns> 
 		protected bool ManRule5()
@@ -413,21 +402,21 @@ namespace NameCaseLib
 		}
 
 		/// <summary>
-		/// Українські чоловічі та жіночі імена, що в називному відмінку однини закінчуються на -а (-я), 
+		/// Українські чоловічі та жіночі імена, що в називному відмінку однини закінчуються на "а" ("я"), 
 		/// відмінються як відповідні іменники І відміни.  
-		/// - Примітка 1. Кінцеві приголосні основи г, к, х у жіночих іменах 
-		///   у давальному та місцевому відмінках однини перед закінченням -і 
-		///   змінюються на з, ц, с: Ольга - Ользі, Палажка - Палажці, Солоха - Солосі.
+		/// - Примітка 1. Кінцеві приголосні основи "г", "к", "х" у жіночих іменах 
+		///   у давальному та місцевому відмінках однини перед закінченням "і" 
+		///   змінюються на "з", "ц", "с": Ольга - Ользі, Палажка - Палажці, Солоха - Солосі.
 		/// - Примітка 2. У жіночих іменах типу Одарка, Параска в родовому відмінку множини 
-		///   в кінці основи між приголосними з"являється звук о: Одарок, Парасок 
+		///   в кінці основи між приголосними з"являється звук "о": Одарок, Парасок 
 		/// </summary>
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns> 
 		protected bool WomanRule1()
 		{
-			//Предпоследний символ
+			// Предпоследний символ
 			string beforeLast = Last(2, 1);
 
-			//Якщо закінчується на ніга -» нога
+			// Якщо закінчується на "ніга" -» "нога"
 			if (Last(4) == "ніга")
 			{
 				string osnova = workingWord.Substring(0, workingWord.Length - 3) + "о";
@@ -436,17 +425,16 @@ namespace NameCaseLib
 				return true;
 			}
 
-			//Останні літера або а
+			// Останні літера або "а"
 			else if (Last(1) == "а")
 			{
 				WordForms(workingWord, new string[] { beforeLast + "и", inverseGKH(beforeLast) + "і", beforeLast + "у", beforeLast + "ою", inverseGKH(beforeLast) + "і", beforeLast + "о" }, 2);
 				Rule(102);
 				return true;
 			}
-			//Остання літера я
+			// Остання літера "я"
 			else if (Last(1) == "я")
 			{
-
 				if (In(beforeLast, vowels) || isApostrof(beforeLast))
 				{
 					WordForms(workingWord, new string[] { "ї", "ї", "ю", "єю", "ї", "є" }, 1);
@@ -478,20 +466,15 @@ namespace NameCaseLib
 				string osLast = Last(osnova, 1);
 				string osbeforeLast = Last(osnova, 2, 1);
 
-				//Чи треба ставити апостроф
-				if (In(osLast, "мвпбф") && (In(osbeforeLast, vowels)))
-				{
+				// Чи треба ставити апостроф
+				if (In(osLast, "мвпбф") && In(osbeforeLast, vowels))
 					apostrof = "’";
-				}
 
-				//Чи треба подвоювати
+				// Чи треба подвоювати
 				if (In(osLast, "дтзсцлн"))
-				{
 					duplicate = osLast;
-				}
 
-
-				//Відмінюємо
+				// Відмінюємо
 				if (Last(1) == "ь")
 				{
 					WordForms(osnova, new string[] { "і", "і", "ь", duplicate + apostrof + "ю", "і", "е" });
@@ -514,10 +497,10 @@ namespace NameCaseLib
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns> 
 		protected bool WomanRule3()
 		{
-			//Предпоследний символ
+			// Предпоследний символ
 			string beforeLast = Last(2, 1);
 
-			//Донская
+			// Донская
 			if (Last(2) == "ая")
 			{
 				WordForms(workingWord, new string[] { "ої", "ій", "ую", "ою", "ій", "ая" }, 2);
@@ -525,7 +508,7 @@ namespace NameCaseLib
 				return true;
 			}
 
-			//Ті що на ськ
+			// Ті що на ськ
 			if (Last(1) == "а" && (In(Last(2, 1), "чнв") || In(Last(3, 2), new string[] { "ьк" })))
 			{
 				WordForms(workingWord, new string[] { beforeLast + "ої", beforeLast + "ій", beforeLast + "у", beforeLast + "ою", beforeLast + "ій", beforeLast + "о" }, 2);
@@ -607,50 +590,33 @@ namespace NameCaseLib
 		protected override void GenderByName(Word word)
 		{
 			SetWorkingWord(word.Value);
-
 			GenderProbability prob = new GenderProbability();
 
-			//Попробуем выжать максимум из имени
-			//Если имя заканчивается на й, то скорее всего мужчина
+			// Попробуем выжать максимум из имени
+			// Если имя заканчивается на "й", то скорее всего мужчина
 			if (Last(1) == "й")
-			{
 				prob.Man += 0.9f;
-			}
 
 			if (InNames(workingWord, new string[] { "петро", "микола" }))
-			{
 				prob.Man += 30;
-			}
 
 			if (In(Last(2), new string[] { "он", "ов", "ав", "ам", "ол", "ан", "рд", "мп", "ко", "ло" }))
-			{
 				prob.Man += 0.5f;
-			}
 
 			if (In(Last(3), new string[] { "бов", "нка", "яра", "ила", "опа" }))
-			{
 				prob.Woman += 0.5f;
-			}
 
 			if (In(Last(1), consonant))
-			{
 				prob.Man += 0.01f;
-			}
 
 			if (Last(1) == "ь")
-			{
 				prob.Man += 0.02f;
-			}
 
 			if (In(Last(2), new string[] { "дь" }))
-			{
 				prob.Woman += 0.1f;
-			}
 
 			if (In(Last(3), new string[] { "ель", "бов" }))
-			{
 				prob.Woman += 0.4f;
-			}
 
 			word.GenderProbability = prob;
 		}
@@ -662,23 +628,16 @@ namespace NameCaseLib
 		protected override void GenderBySurName(Word word)
 		{
 			SetWorkingWord(word.Value);
-
 			GenderProbability prob = new GenderProbability();
 
 			if (In(Last(2), new string[] { "ов", "ин", "ев", "єв", "ін", "їн", "ий", "їв", "ів", "ой", "ей" }))
-			{
 				prob.Man += 0.4f;
-			}
 
 			if (In(Last(3), new string[] { "ова", "ина", "ева", "єва", "іна", "мін" }))
-			{
 				prob.Woman += 0.4f;
-			}
 
 			if (In(Last(2), new string[] { "ая" }))
-			{
 				prob.Woman += 0.4f;
-			}
 
 			word.GenderProbability = prob;
 		}
@@ -692,13 +651,10 @@ namespace NameCaseLib
 			SetWorkingWord(word.Value);
 
 			if (Last(2) == "ич")
-			{
 				word.GenderProbability = new GenderProbability(10, 0); // мужчина
-			}
+
 			if (Last(2) == "на")
-			{
 				word.GenderProbability = new GenderProbability(0, 12); // женщина
-			}
 		}
 
 		/// <summary>
@@ -707,67 +663,46 @@ namespace NameCaseLib
 		/// </summary>
 		protected override void DetectFioPart(Word word)
 		{
-			string fiopart = word.Value;
-			SetWorkingWord(fiopart);
+			SetWorkingWord(word.Value);
 
-			//Считаем вероятность
+			// Считаем вероятность
 			float first = 0;
-			float second = 0;
-			float father = 0;
+			float surname = 0;
+			float patr = 0;
 
-			//если смахивает на отчество
+			// Если смахивает на отчество
 			if (In(Last(3), new string[] { "вна", "чна", "ліч" }) || In(Last(4), new string[] { "ьмич", "ович" }))
-			{
-				father += 3;
-			}
+				patr += 3;
 
-			//Похоже на имя
+			// Похоже на имя
 			if (In(Last(3), new string[] { "тин" }) || In(Last(4), new string[] { "ьмич", "юбов", "івна", "явка", "орив", "кіян" }))
-			{
 				first += 0.5f;
-			}
 
-			//Исключения
-			if (InNames(fiopart, new string[] { "лев", "гаїна", "афіна", "антоніна", "ангеліна", "альвіна", "альбіна", "аліна", "павло", "олесь", "микола", "мая", "англеліна", "елькін", "мерлін" }))
-			{
+			// Исключения
+			if (InNames(word.Value, new string[] { "лев", "гаїна", "афіна", "антоніна", "ангеліна", "альвіна", "альбіна", "аліна", "павло", "олесь", "микола", "мая", "англеліна", "елькін", "мерлін" }))
 				first += 10;
-			}
 
-			//похоже на фамилию
+			// Похоже на фамилию
 			if (In(Last(2), new string[] { "ов", "ін", "ев", "єв", "ий", "ин", "ой", "ко", "ук", "як", "ца", "их", "ик", "ун", "ок", "ша", "ая", "га", "єк", "аш", "ив", "юк", "ус", "це", "ак", "бр", "яр", "іл", "ів", "ич", "сь", "ей", "нс", "яс", "ер", "ай", "ян", "ах", "ць", "ющ", "іс", "ач", "уб", "ох", "юх", "ут", "ча", "ул", "вк", "зь", "уц", "їн", "де", "уз", "юр", "ік", "іч", "ро" }))
-			{
-				second += 0.4f;
-			}
+				surname += 0.4f;
 
 			if (In(Last(3), new string[] { "ова", "ева", "єва", "тих", "рик", "вач", "аха", "шен", "мей", "арь", "вка", "шир", "бан", "чий", "іна", "їна", "ька", "ань", "ива", "аль", "ура", "ран", "ало", "ола", "кур", "оба", "оль", "нта", "зій", "ґан", "іло", "шта", "юпа", "рна", "бла", "еїн", "има", "мар", "кар", "оха", "чур", "ниш", "ета", "тна", "зур", "нір", "йма", "орж", "рба", "іла", "лас", "дід", "роз", "аба", "чан", "ган" }))
-			{
-				second += 0.4f;
-			}
+				surname += 0.4f;
 
 			if (In(Last(4), new string[] { "ьник", "нчук", "тник", "кирь", "ский", "шена", "шина", "вина", "нина", "гана", "гана", "хній", "зюба", "орош", "орон", "сило", "руба", "лест", "мара", "обка", "рока", "сика", "одна", "нчар", "вата", "ндар", "грій" }))
-			{
-				second += 0.4f;
-			}
+				surname += 0.4f;
 
 			if (Last(1) == "і")
-			{
-				second += 0.2f;
-			}
+				surname += 0.2f;
 
-			float max = Math.Max(Math.Max(first, second), father);
+			float max = Math.Max(Math.Max(first, surname), patr);
 
 			if (first == max)
-			{
 				word.FioPart = FioPart.Name;
-			}
-			else if (second == max)
-			{
+			else if (surname == max)
 				word.FioPart = FioPart.SurName;
-			}
 			else
-			{
 				word.FioPart = FioPart.PatrName;
-			}
 		}
 	}
 }

@@ -188,7 +188,7 @@ namespace NameCaseLib
 			string result = "";
 			int startIndex = word.Length - length;
 			if (startIndex >= 0)
-				result = word.Substring(word.Length - length, stopAfter);
+				result = word.Substring(startIndex, stopAfter);
 			else
 				result = word;
 			return result;

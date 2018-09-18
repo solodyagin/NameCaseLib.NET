@@ -23,7 +23,7 @@
 		/// <summary>
 		/// Окончательное решение, к какому полу относится слово
 		/// </summary>
-		private Gender genderSolved = Gender.Null;
+		private Gender _genderSolved = Gender.Null;
 
 		/// <summary>
 		/// Маска больших букв в слове.
@@ -32,17 +32,17 @@
 		/// - x - маленькая буква
 		/// - X - больная буква
 		/// </summary>
-		private LettersMask[] letterMask;
+		private LettersMask[] _letterMask;
 
 		/// <summary>
 		/// Содержит true, если все слово было в верхнем регистре и false, если не было
 		/// </summary>
-		private bool isUpperCase = false;
+		private bool _isUpperCase = false;
 
 		/// <summary>
 		/// Массив содержит все падежи слова, полученные после склонения текущего слова
 		/// </summary>
-		private string[] nameCases;
+		private string[] _nameCases;
 
 		/// <summary>
 		/// Номер правила, по которому было произведено склонение текущего слова
@@ -72,20 +72,19 @@
 		/// <param name="word">Слово для которого нужна маска</param>
 		private void GenerateMask(string word)
 		{
-			isUpperCase = true;
-			int length = word.Length;
-			letterMask = new LettersMask[length];
-			for (int i = 0; i < length; i++)
+			_isUpperCase = true;
+			_letterMask = new LettersMask[word.Length];
+			for (int i = 0; i < word.Length; i++)
 			{
 				string letter = word.Substring(i, 1);
 				if (letter == letter.ToLower())
 				{
-					isUpperCase = false;
-					letterMask[i] = LettersMask.x;
+					_isUpperCase = false;
+					_letterMask[i] = LettersMask.x;
 				}
 				else
 				{
-					letterMask[i] = LettersMask.X;
+					_letterMask[i] = LettersMask.X;
 				}
 			}
 		}
@@ -95,33 +94,24 @@
 		/// </summary>
 		private void ReturnMask()
 		{
-			int wordCount = nameCases.Length;
-			if (isUpperCase)
+			if (_isUpperCase)
 			{
-				for (int i = 0; i < wordCount; i++)
-				{
-					nameCases[i] = nameCases[i].ToUpper();
-				}
+				for (int i = 0; i < _nameCases.Length; i++)
+					_nameCases[i] = _nameCases[i].ToUpper();
 			}
 			else
 			{
-				for (int i = 0; i < wordCount; i++)
+				for (int i = 0; i < _nameCases.Length; i++)
 				{
-					int lettersCount = nameCases[i].Length;
-					int maskLength = letterMask.Length;
 					string newStr = "";
-					for (int letter = 0; letter < lettersCount; letter++)
+					for (int letter = 0; letter < _nameCases[i].Length; letter++)
 					{
-						if (letter < maskLength && letterMask[letter] == LettersMask.X)
-						{
-							newStr += nameCases[i].Substring(letter, 1).ToUpper();
-						}
+						if (letter < _letterMask.Length && _letterMask[letter] == LettersMask.X)
+							newStr += _nameCases[i].Substring(letter, 1).ToUpper();
 						else
-						{
-							newStr += nameCases[i].Substring(letter, 1);
-						}
+							newStr += _nameCases[i].Substring(letter, 1);
 					}
-					nameCases[i] = newStr;
+					_nameCases[i] = newStr;
 				}
 			}
 		}
@@ -133,12 +123,12 @@
 		{
 			set
 			{
-				nameCases = value;
+				_nameCases = value;
 				ReturnMask();
 			}
 			get
 			{
-				return nameCases;
+				return _nameCases;
 			}
 		}
 
@@ -149,15 +139,13 @@
 		{
 			get
 			{
-				if (genderSolved == Gender.Null)
-				{
-					genderSolved = (GenderProbability.Man > GenderProbability.Woman) ? Gender.Man : Gender.Woman;
-				}
-				return genderSolved;
+				if (_genderSolved == Gender.Null)
+					_genderSolved = (GenderProbability.Man > GenderProbability.Woman) ? Gender.Man : Gender.Woman;
+				return _genderSolved;
 			}
 			set
 			{
-				genderSolved = value;
+				_genderSolved = value;
 			}
 		}
 
@@ -168,7 +156,7 @@
 		/// <returns>строка с нужным падежом текущего слова</returns>
 		public string GetNameCase(Padeg padeg)
 		{
-			return nameCases[(int)padeg];
+			return _nameCases[(int)padeg];
 		}
 
 		/// <summary>
@@ -178,7 +166,7 @@
 		/// <returns>true если определен и false если нет</returns>
 		public bool isGenderSolved()
 		{
-			return genderSolved != Gender.Null;
+			return _genderSolved != Gender.Null;
 		}
 	}
 }

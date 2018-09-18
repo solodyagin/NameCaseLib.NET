@@ -7,75 +7,63 @@ namespace NameCaseLib
 	/// </summary>
 	public class WordArray
 	{
-		private int length = 0;
-		private int capacity = 4;
-
-		private Word[] words;
+		private int _capacity = 4;
+		private Word[] _words;
 
 		/// <summary>
 		/// Создаем новый массив слов со стандартной длиной
 		/// </summary>
 		public WordArray()
 		{
-			words = new Word[capacity];
+			_words = new Word[_capacity];
 		}
 
 		/// <summary>
 		/// Получаем из массива слов слово с указаным индексом
 		/// </summary>
 		/// <param name="id">Индекс слова</param>
-		/// <returns>Слово</returns>
+		/// <returns>объект класса Word</returns>
 		public Word GetWord(int id)
 		{
-			return words[id];
+			return _words[id];
 		}
 
 		private void EnlargeArray()
 		{
-			Word[] tmp = new Word[capacity * 2];
-			Array.Copy(words, tmp, length);
-			words = tmp;
-			capacity *= 2;
+			Word[] tmp = new Word[_capacity * 2];
+			Array.Copy(_words, tmp, Length);
+			_words = tmp;
+			_capacity *= 2;
 		}
 
 		/// <summary>
 		/// Добавляем в массив слов новое слово
 		/// </summary>
-		/// <param name="word">Слово</param>
+		/// <param name="word">объект класса Word</param>
 		public void AddWord(Word word)
 		{
-			if (length >= capacity)
-			{
+			if (Length >= _capacity)
 				EnlargeArray();
-			}
-			words[length] = word;
-			length++;
+			_words[Length] = word;
+			Length++;
 		}
 
 		/// <summary>
 		/// Вовращает количество слов в массиве
 		/// </summary>
-		public int Length
-		{
-			get
-			{
-				return length;
-			}
-		}
+		public int Length { get; private set; } = 0;
 
 		/// <summary>
 		/// Находит имя/фамилию/отчество среди слов в массиве
 		/// </summary>
 		/// <param name="fioPart">Что нужно найти</param>
-		/// <returns>Слово</returns>
+		/// <returns>объект класса Word</returns>
 		public Word GetByFioPart(FioPart fioPart)
 		{
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < Length; i++)
 			{
-				if (words[i].FioPart == fioPart)
-				{
-					return words[i];
-				}
+				if (_words[i].FioPart == fioPart)
+					return _words[i];
 			}
 			return new Word("");
 		}
