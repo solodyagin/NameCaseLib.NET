@@ -9,9 +9,16 @@ namespace NameCaseLib
 	public abstract class Core
 	{
 		/// <summary>
-		/// Версия языкового файла
+		/// Возвращает текущую версию библиотеки
 		/// </summary>
-		protected static string languageBuild;
+		static public string Version
+		{
+			get
+			{
+				Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+				return ver.ToString();
+			}
+		}
 
 		/// <summary>
 		/// Готовность системы:
@@ -19,18 +26,18 @@ namespace NameCaseLib
 		/// - У всех слов определен пол
 		/// Если все сделано стоит флаг true, при добавлении нового слова флаг сбрасывается на false
 		/// </summary>
-		private bool ready = false;
+		private bool _ready = false;
 
 		/// <summary>
 		/// Если все текущие слова были просклонены и в каждом слове уже есть результат склонения,
 		/// тогда true. Если было добавлено новое слово, то флаг сбрасывается на false
 		/// </summary>
-		private bool finished = false;
+		private bool _finished = false;
 
 		/// <summary>
 		///  Массив содержит елементы типа Word. Это все слова, которые нужно обработать и просклонять
 		/// </summary>
-		private WordArray words;
+		private WordArray _words;
 
 		/// <summary>
 		/// Текущее слово, с которым сейчас идет работа
@@ -40,7 +47,7 @@ namespace NameCaseLib
 		/// <summary>
 		/// Номер последнего использованного правила, устанавливается методом Rule()
 		/// </summary>
-		private int lastRule = 0;
+		private int _lastRule = 0;
 
 		/// <summary>
 		/// Массив содержит результат склонения слова во всех падежах
@@ -57,7 +64,7 @@ namespace NameCaseLib
 		/// </summary>
 		private void Reset()
 		{
-			lastRule = 0;
+			_lastRule = 0;
 			lastResult = new string[caseCount];
 		}
 
@@ -66,8 +73,8 @@ namespace NameCaseLib
 		/// </summary>
 		private void NotReady()
 		{
-			ready = false;
-			finished = false;
+			_ready = false;
+			_finished = false;
 		}
 
 		/// <summary>
@@ -76,7 +83,7 @@ namespace NameCaseLib
 		/// </summary>
 		public Core FullReset()
 		{
-			words = new WordArray();
+			_words = new WordArray();
 			Reset();
 			NotReady();
 			return this;
@@ -88,7 +95,7 @@ namespace NameCaseLib
 		/// <param name="ruleID">Правило</param>
 		protected void Rule(int ruleID)
 		{
-			lastRule = ruleID;
+			_lastRule = ruleID;
 		}
 
 		/// <summary>
@@ -96,7 +103,7 @@ namespace NameCaseLib
 		/// </summary>
 		protected int GetRule()
 		{
-			return lastRule;
+			return _lastRule;
 		}
 
 		/// <summary>
@@ -116,9 +123,7 @@ namespace NameCaseLib
 		{
 			lastResult = new string[caseCount];
 			for (int i = 0; i < caseCount; i++)
-			{
 				lastResult[i] = workingWord;
-			}
 		}
 
 		/// <summary>
@@ -131,13 +136,9 @@ namespace NameCaseLib
 			string result = "";
 			int startIndex = workingWord.Length - length;
 			if (startIndex >= 0)
-			{
 				result = workingWord.Substring(workingWord.Length - length, length);
-			}
 			else
-			{
 				result = workingWord;
-			}
 			return result;
 		}
 
@@ -152,13 +153,9 @@ namespace NameCaseLib
 			string result = "";
 			int startIndex = word.Length - length;
 			if (startIndex >= 0)
-			{
 				result = word.Substring(word.Length - length, length);
-			}
 			else
-			{
 				result = word;
-			}
 			return result;
 		}
 
@@ -173,13 +170,9 @@ namespace NameCaseLib
 			string result = "";
 			int startIndex = workingWord.Length - length;
 			if (startIndex >= 0)
-			{
 				result = workingWord.Substring(workingWord.Length - length, stopAfter);
-			}
 			else
-			{
 				result = workingWord;
-			}
 			return result;
 		}
 
@@ -195,13 +188,9 @@ namespace NameCaseLib
 			string result = "";
 			int startIndex = word.Length - length;
 			if (startIndex >= 0)
-			{
 				result = word.Substring(word.Length - length, stopAfter);
-			}
 			else
-			{
 				result = word;
-			}
 			return result;
 		}
 
@@ -215,17 +204,14 @@ namespace NameCaseLib
 		{
 			if (gender != Gender.Null)
 			{
-				int rulesLength = rulesArray.Length;
 				string rulesName = (gender == Gender.Man ? "Man" : "Woman");
 				Type classType = this.GetType();
-				for (int i = 0; i < rulesLength; i++)
+				for (int i = 0; i < rulesArray.Length; i++)
 				{
 					string methodName = string.Format("{0}Rule{1}", rulesName, rulesArray[i]);
 					bool res = (bool)classType.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke(this, null);
 					if (res)
-					{
 						return true;
-					}
 				}
 			}
 			return false;
@@ -250,15 +236,12 @@ namespace NameCaseLib
 		/// <returns>true если найдено и false если нет</returns>
 		protected bool In(string needle, string[] haystack)
 		{
-			int length = haystack.Length;
 			if (needle != "")
 			{
-				for (int i = 0; i < length; i++)
+				for (int i = 0; i < haystack.Length; i++)
 				{
 					if (haystack[i] == needle)
-					{
 						return true;
-					}
 				}
 			}
 			return false;
@@ -283,13 +266,10 @@ namespace NameCaseLib
 		/// <returns>true если входит</returns>
 		protected bool InNames(string needle, string[] names)
 		{
-			int length = names.Length;
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < names.Length; i++)
 			{
 				if (needle == names[i])
-				{
 					return true;
-				}
 			}
 			return false;
 		}
@@ -307,19 +287,13 @@ namespace NameCaseLib
 			lastResult[0] = workingWord;
 
 			if (word.Length >= replaceLast)
-			{
-				// убираем лишние буквы
-				word = word.Substring(0, word.Length - replaceLast);
-			}
+				word = word.Substring(0, word.Length - replaceLast); // Убираем лишние буквы
 			else
-			{
 				word = "";
-			}
+
 			// Добавляем окончания
 			for (int i = 1; i < caseCount; i++)
-			{
 				lastResult[i] = word + endings[i - 1];
-			}
 		}
 
 		/// <summary>
@@ -341,9 +315,7 @@ namespace NameCaseLib
 		{
 			if (name.Trim() != "")
 			{
-				Word tmpWord = new Word(name);
-				tmpWord.FioPart = FioPart.Name;
-				words.AddWord(tmpWord);
+				_words.AddWord(new Word(name) { FioPart = FioPart.Name });
 				NotReady();
 			}
 			return this;
@@ -358,9 +330,7 @@ namespace NameCaseLib
 		{
 			if (name.Trim() != "")
 			{
-				Word tmpWord = new Word(name);
-				tmpWord.FioPart = FioPart.SurName;
-				words.AddWord(tmpWord);
+				_words.AddWord(new Word(name) { FioPart = FioPart.SurName });
 				NotReady();
 			}
 			return this;
@@ -375,9 +345,7 @@ namespace NameCaseLib
 		{
 			if (name.Trim() != "")
 			{
-				Word tmpWord = new Word(name);
-				tmpWord.FioPart = FioPart.PatrName;
-				words.AddWord(tmpWord);
+				_words.AddWord(new Word(name) { FioPart = FioPart.PatrName });
 				NotReady();
 			}
 			return this;
@@ -390,11 +358,8 @@ namespace NameCaseLib
 		/// <returns></returns>
 		public Core SetGender(Gender gender)
 		{
-			int length = words.Length;
-			for (int i = 0; i < length; i++)
-			{
-				words.GetWord(i).Gender = gender;
-			}
+			for (int i = 0; i < _words.Length; i++)
+				_words.GetWord(i).Gender = gender;
 			return this;
 		}
 
@@ -430,9 +395,7 @@ namespace NameCaseLib
 		private void PrepareFioPart(Word word)
 		{
 			if (word.FioPart == FioPart.Null)
-			{
 				DetectFioPart(word);
-			}
 		}
 
 		/// <summary>
@@ -440,11 +403,8 @@ namespace NameCaseLib
 		/// </summary>
 		private void PrepareAllFioParts()
 		{
-			int length = words.Length;
-			for (int i = 0; i < length; i++)
-			{
-				PrepareFioPart(words.GetWord(i));
-			}
+			for (int i = 0; i < _words.Length; i++)
+				PrepareFioPart(_words.GetWord(i));
 		}
 
 		/// <summary>
@@ -470,34 +430,27 @@ namespace NameCaseLib
 		private void SolveGender()
 		{
 			// Ищем, может где-то пол уже установлен
-			int length = words.Length;
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < _words.Length; i++)
 			{
-				if (words.GetWord(i).isGenderSolved())
+				if (_words.GetWord(i).isGenderSolved())
 				{
-					SetGender(words.GetWord(i).Gender);
+					SetGender(_words.GetWord(i).Gender);
 					return;
 				}
 			}
 
 			// Если нет, тогда определяем у каждого слова и потом суммируем
 			GenderProbability probability = new GenderProbability(0, 0);
-
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < _words.Length; i++)
 			{
-				Word word = words.GetWord(i);
+				Word word = _words.GetWord(i);
 				PrepareGender(word);
 				probability = probability + word.GenderProbability;
 			}
-
 			if (probability.Man > probability.Woman)
-			{
 				SetGender(Gender.Man);
-			}
 			else
-			{
 				SetGender(Gender.Woman);
-			}
 		}
 
 		/// <summary>
@@ -506,11 +459,11 @@ namespace NameCaseLib
 		/// </summary>
 		private void PrepareEverything()
 		{
-			if (!ready)
+			if (!_ready)
 			{
 				PrepareAllFioParts();
 				SolveGender();
-				ready = true;
+				_ready = true;
 			}
 		}
 
@@ -521,14 +474,10 @@ namespace NameCaseLib
 		public Gender GenderAutoDetect()
 		{
 			PrepareEverything();
-			if (words.Length > 0)
-			{
-				return words.GetWord(0).Gender;
-			}
+			if (_words.Length > 0)
+				return _words.GetWord(0).Gender;
 			else
-			{
 				return Gender.Null;
-			}
 		}
 
 		/// <summary>
@@ -539,14 +488,11 @@ namespace NameCaseLib
 		{
 			// Удаляем лишние пробелы
 			fullname = System.Text.RegularExpressions.Regex.Replace(fullname.Trim(), @"\s+", " ");
-
+			// Разбиваем на слова
 			string[] arr = fullname.Split(new Char[] { ' ' });
-			int length = arr.Length;
-			words = new WordArray();
-			for (int i = 0; i < length; i++)
-			{
-				words.AddWord(new Word(arr[i]) { Position = i + 1 });
-			}
+			_words = new WordArray();
+			for (int i = 0; i < arr.Length; i++)
+				_words.AddWord(new Word(arr[i]) { Position = i + 1 });
 		}
 
 		/// <summary>
@@ -555,8 +501,7 @@ namespace NameCaseLib
 		/// <param name="word">Слово</param>
 		protected void WordCase(Word word)
 		{
-			Gender gender = word.Gender;
-			string genderName = (gender == Gender.Man ? "Man" : "Woman");
+			string genderName = (word.Gender == Gender.Man ? "Man" : "Woman");
 
 			string fioPartName = "";
 			switch (word.FioPart)
@@ -573,7 +518,7 @@ namespace NameCaseLib
 			if (res)
 			{
 				word.NameCases = lastResult;
-				word.Rule = lastRule;
+				word.Rule = _lastRule;
 			}
 			else
 			{
@@ -588,17 +533,12 @@ namespace NameCaseLib
 		/// </summary>
 		private void AllWordCases()
 		{
-			if (!finished)
+			if (!_finished)
 			{
 				PrepareEverything();
-				int length = words.Length;
-
-				for (int i = 0; i < length; i++)
-				{
-					WordCase(words.GetWord(i));
-				}
-
-				finished = true;
+				for (int i = 0; i < _words.Length; i++)
+					WordCase(_words.GetWord(i));
+				_finished = true;
 			}
 		}
 
@@ -609,7 +549,7 @@ namespace NameCaseLib
 		public string[] GetNameCase()
 		{
 			AllWordCases();
-			return words.GetByFioPart(FioPart.Name).NameCases;
+			return _words.GetByFioPart(FioPart.Name).NameCases;
 		}
 
 		/// <summary>
@@ -620,7 +560,7 @@ namespace NameCaseLib
 		public string GetNameCase(Padeg caseNum)
 		{
 			AllWordCases();
-			return words.GetByFioPart(FioPart.Name).GetNameCase(caseNum);
+			return _words.GetByFioPart(FioPart.Name).GetNameCase(caseNum);
 		}
 
 		/// <summary>
@@ -630,7 +570,7 @@ namespace NameCaseLib
 		public string[] GetSurNameCase()
 		{
 			AllWordCases();
-			return words.GetByFioPart(FioPart.SurName).NameCases;
+			return _words.GetByFioPart(FioPart.SurName).NameCases;
 		}
 
 		/// <summary>
@@ -641,7 +581,7 @@ namespace NameCaseLib
 		public string GetSurNameCase(Padeg caseNum)
 		{
 			AllWordCases();
-			return words.GetByFioPart(FioPart.SurName).GetNameCase(caseNum);
+			return _words.GetByFioPart(FioPart.SurName).GetNameCase(caseNum);
 		}
 
 		/// <summary>
@@ -651,7 +591,7 @@ namespace NameCaseLib
 		public string[] GetPatrNameCase()
 		{
 			AllWordCases();
-			return words.GetByFioPart(FioPart.PatrName).NameCases;
+			return _words.GetByFioPart(FioPart.PatrName).NameCases;
 		}
 
 		/// <summary>
@@ -662,7 +602,7 @@ namespace NameCaseLib
 		public string GetPatrNameCase(Padeg caseNum)
 		{
 			AllWordCases();
-			return words.GetByFioPart(FioPart.PatrName).GetNameCase(caseNum);
+			return _words.GetByFioPart(FioPart.PatrName).GetNameCase(caseNum);
 		}
 
 		/// <summary>
@@ -676,9 +616,7 @@ namespace NameCaseLib
 			FullReset();
 			SetName(name);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			return GetNameCase();
 		}
 
@@ -704,9 +642,7 @@ namespace NameCaseLib
 			FullReset();
 			SetName(name);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			return GetNameCase(caseNum);
 		}
 
@@ -732,9 +668,7 @@ namespace NameCaseLib
 			FullReset();
 			SetSurName(surName);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			return GetSurNameCase();
 		}
 
@@ -760,9 +694,7 @@ namespace NameCaseLib
 			FullReset();
 			SetSurName(surName);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			return GetSurNameCase(caseNum);
 		}
 
@@ -788,9 +720,7 @@ namespace NameCaseLib
 			FullReset();
 			SetPatrName(patrName);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			return GetPatrNameCase();
 		}
 
@@ -816,9 +746,7 @@ namespace NameCaseLib
 			FullReset();
 			SetPatrName(patrName);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			return GetPatrNameCase(caseNum);
 		}
 
@@ -840,12 +768,9 @@ namespace NameCaseLib
 		/// <returns>Соединённая строка</returns>
 		private string ConnectedCase(Padeg caseNum)
 		{
-			int length = words.Length;
 			string result = "";
-			for (int i = 0; i < length; i++)
-			{
-				result += words.GetWord(i).GetNameCase(caseNum) + " ";
-			}
+			for (int i = 0; i < _words.Length; i++)
+				result += _words.GetWord(i).GetNameCase(caseNum) + " ";
 			return result.TrimEnd();
 		}
 
@@ -857,10 +782,7 @@ namespace NameCaseLib
 		{
 			string[] res = new string[caseCount];
 			for (int i = 0; i < caseCount; i++)
-			{
 				res[i] = ConnectedCase((Padeg)i);
-			}
-
 			return res;
 		}
 
@@ -875,9 +797,7 @@ namespace NameCaseLib
 			FullReset();
 			SplitFullName(fullName);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			AllWordCases();
 			return ConnectedCases();
 		}
@@ -904,9 +824,7 @@ namespace NameCaseLib
 			FullReset();
 			SplitFullName(fullName);
 			if (gender != Gender.Null)
-			{
 				SetGender(gender);
-			}
 			AllWordCases();
 			return ConnectedCase(caseNum);
 		}
@@ -928,7 +846,7 @@ namespace NameCaseLib
 		/// <returns>Массив всех слов</returns>
 		public WordArray GetWordsArray()
 		{
-			return words;
+			return _words;
 		}
 
 		/// <summary>
@@ -990,28 +908,5 @@ namespace NameCaseLib
 		/// </summary>
 		/// <param name="word">Слово, которое нужно идентифицировать</param>
 		abstract protected void DetectFioPart(Word word);
-
-		/// <summary>
-		/// Возвращает текущую версию библиотеки
-		/// </summary>
-		static public string Version
-		{
-			get
-			{
-				Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-				return ver.ToString();
-			}
-		}
-
-		/// <summary>
-		/// Возвращает текущую версию языкового файла
-		/// </summary>
-		static public string LanguageVersion
-		{
-			get
-			{
-				return languageBuild;
-			}
-		}
 	}
 }

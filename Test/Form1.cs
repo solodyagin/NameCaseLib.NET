@@ -20,6 +20,7 @@ namespace Test
 			{
 				textBox1.Clear();
 				textBox1.AppendText(string.Format("Версия библиотеки: {0}\r\n", Core.Version));
+				textBox1.AppendText(string.Format("Версия класса языковых правил: {0}\r\n", NameCaseLib.Ru.LanguageBuild));
 				textBox1.AppendText("\r\n");
 
 				NameCaseLib.Ru ru = new NameCaseLib.Ru();
@@ -46,9 +47,7 @@ namespace Test
 		private void comboBox1_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.Enter)
-			{
 				button1.PerformClick();
-			}
 		}
 	}
 

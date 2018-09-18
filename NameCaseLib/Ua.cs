@@ -7,12 +7,12 @@ namespace NameCaseLib
 	/// Правила определения пола человека по ФИО для украинского языка
 	/// Система разделения фамилий имен и отчеств для украинского языка 
 	/// </summary>
-	public class Ua : NameCaseLib.Core
+	public class Ua : Core
 	{
 		/// <summary>
 		/// Версия языкового файла
 		/// </summary>
-		protected new static string languageBuild = "11071222";
+		public static string LanguageBuild = "20110712-22"; // Формат: ГодМесяцДень-номерИзменения
 
 		/// <summary>
 		/// Количество падежей в языке

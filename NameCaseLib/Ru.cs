@@ -8,12 +8,12 @@ namespace NameCaseLib
 	/// Правила определения пола по ФИО для русского языка
 	/// Система разделения фамилий, имен и отчеств для русского языка
 	/// </summary>
-	public class Ru : NameCaseLib.Core
+	public class Ru : Core
 	{
 		/// <summary>
 		/// Версия языкового файла
 		/// </summary>
-		protected new static string languageBuild = "11072717";
+		public static string LanguageBuild = "20180918-1"; // Формат: ГодМесяцДень-номерИзменения
 
 		/// <summary>
 		/// Количество падежей в языке
@@ -409,7 +409,7 @@ namespace NameCaseLib
 
 		/// <summary>
 		/// Русские женские имена, оканчивающиеся на мягкий согласный, склоняются, 
-		/// как существительные женского рода типа дочь, тень
+		/// как существительные женского рода
 		/// </summary>
 		/// <returns>true - правило было задействовано</returns>
 		protected bool WomanRule3()
@@ -544,56 +544,37 @@ namespace NameCaseLib
 			// Попробуем выжать максимум из имени
 			// Если имя заканчивается на "й", то скорее всего мужчина
 			if (Last(1) == "й")
-			{
 				prob.Man += 0.9f;
-			}
+
 			if (In(Last(2), new string[] { "он", "ов", "ав", "ам", "ол", "ан", "рд", "мп" }))
-			{
 				prob.Man += 0.3f;
-			}
+
 			if (In(Last(1), consonant))
-			{
 				prob.Man += 0.01f;
-			}
+
 			if (Last(1) == "ь")
-			{
 				prob.Man += 0.02f;
-			}
 
 			if (In(Last(2), new string[] { "вь", "фь", "ль" }))
-			{
 				prob.Woman += 0.1f;
-			}
 
 			if (In(Last(2), new string[] { "ла" }))
-			{
 				prob.Woman += 0.04f;
-			}
 
 			if (In(Last(2), new string[] { "то", "ма" }))
-			{
 				prob.Man += 0.01f;
-			}
 
 			if (In(Last(3), new string[] { "лья", "вва", "ока", "ука", "ита" }))
-			{
 				prob.Man += 0.2f;
-			}
 
 			if (In(Last(3), new string[] { "има" }))
-			{
 				prob.Woman += 0.15f;
-			}
 
 			if (In(Last(3), new string[] { "лия", "ния", "сия", "дра", "лла", "кла", "опа" }))
-			{
 				prob.Woman += 0.5f;
-			}
 
 			if (In(Last(4), new string[] { "льда", "фира", "нина", "лита", "алья" }))
-			{
 				prob.Woman += 0.5f;
-			}
 
 			word.GenderProbability = prob;
 		}
@@ -609,19 +590,13 @@ namespace NameCaseLib
 			GenderProbability prob = new GenderProbability();
 
 			if (In(Last(2), new string[] { "ов", "ин", "ев", "ий", "ёв", "ый", "ын", "ой" }))
-			{
 				prob.Man += 0.4f;
-			}
 
 			if (In(Last(3), new string[] { "ова", "ина", "ева", "ёва", "ына", "мин" }))
-			{
 				prob.Woman += 0.4f;
-			}
 
 			if (In(Last(2), new string[] { "ая" }))
-			{
 				prob.Woman += 0.4f;
-			}
 
 			word.GenderProbability = prob;
 		}
@@ -635,13 +610,10 @@ namespace NameCaseLib
 			SetWorkingWord(word.Value);
 
 			if (Last(2) == "ич")
-			{
 				word.GenderProbability = new GenderProbability(10, 0); // мужчина
-			}
+
 			if (Last(2) == "на")
-			{
 				word.GenderProbability = new GenderProbability(0, 12); // женщина
-			}
 		}
 
 		/// <summary>
