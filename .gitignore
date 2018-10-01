@@ -1,6 +1,4 @@
-NameCaseLib.s*
 obj/
-Properties/
 bin/
 *.user
 .vs
