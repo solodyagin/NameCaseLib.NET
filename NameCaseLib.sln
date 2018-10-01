@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameCaseLib", "NameCaseLib\NameCaseLib.csproj", "{29DE141C-676C-4B75-B1AB-14A0BB7DC7BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameCaseLib", "NameCaseLib\NameCaseLib.csproj", "{29DE141C-676C-4B75-B1AB-14A0BB7DC7BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{0FBE6F39-F39C-40C2-B8D0-81FF275283BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCL.Test", "NCL.Test\NCL.Test.csproj", "{0FBE6F39-F39C-40C2-B8D0-81FF275283BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCL.WebAPI", "NCL.WebAPI\NCL.WebAPI.csproj", "{8E7F02A1-B3FD-48DA-A5AE-63CA4704E862}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29DE141C-676C-4B75-B1AB-14A0BB7DC7BC} = {29DE141C-676C-4B75-B1AB-14A0BB7DC7BC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{0FBE6F39-F39C-40C2-B8D0-81FF275283BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FBE6F39-F39C-40C2-B8D0-81FF275283BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FBE6F39-F39C-40C2-B8D0-81FF275283BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E7F02A1-B3FD-48DA-A5AE-63CA4704E862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E7F02A1-B3FD-48DA-A5AE-63CA4704E862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E7F02A1-B3FD-48DA-A5AE-63CA4704E862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E7F02A1-B3FD-48DA-A5AE-63CA4704E862}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
