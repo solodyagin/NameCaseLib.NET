@@ -28,9 +28,9 @@ namespace Test
 
 					string[] m = lang.Q(comboBox1.Text);
 					WordArray wa = lang.GetWordsArray();
-					textBox1.AppendText(string.Format("Фамилия:  {0}\r\n", wa.GetByFioPart(FioPart.SurName).Value));
-					textBox1.AppendText(string.Format("Имя:      {0}\r\n", wa.GetByFioPart(FioPart.Name).Value));
-					textBox1.AppendText(string.Format("Отчество: {0}\r\n", wa.GetByFioPart(FioPart.PatrName).Value));
+					textBox1.AppendText(string.Format("Фамилия:  {0}\r\n", lang.GetSurNameCase(Padeg.IMENITLN)));
+					textBox1.AppendText(string.Format("Имя:      {0}\r\n", lang.GetNameCase(Padeg.IMENITLN)));
+					textBox1.AppendText(string.Format("Отчество: {0}\r\n", lang.GetPatrNameCase(Padeg.IMENITLN)));
 					textBox1.AppendText("\r\n");
 
 					textBox1.AppendText(string.Format("Пол: {0}\r\n", lang.GenderAutoDetect().GetDescription()));
@@ -52,9 +52,9 @@ namespace Test
 
 					string[] m = lang.Q(comboBox1.Text);
 					WordArray wa = lang.GetWordsArray();
-					textBox1.AppendText(string.Format("Прізвище: {0}\r\n", wa.GetByFioPart(FioPart.SurName).Value));
-					textBox1.AppendText(string.Format("Iм'я:     {0}\r\n", wa.GetByFioPart(FioPart.Name).Value));
-					textBox1.AppendText(string.Format("Батькові: {0}\r\n", wa.GetByFioPart(FioPart.PatrName).Value));
+					textBox1.AppendText(string.Format("Прізвище: {0}\r\n", lang.GetSurNameCase(Padeg.IMENITLN)));
+					textBox1.AppendText(string.Format("Iм'я:     {0}\r\n", lang.GetNameCase(Padeg.IMENITLN)));
+					textBox1.AppendText(string.Format("Батькові: {0}\r\n", lang.GetPatrNameCase(Padeg.IMENITLN)));
 					textBox1.AppendText("\r\n");
 
 					Gender gender = lang.GenderAutoDetect();
