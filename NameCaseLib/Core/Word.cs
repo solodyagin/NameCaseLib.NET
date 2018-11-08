@@ -1,14 +1,15 @@
 ﻿namespace NameCaseLib
 {
-	/// <summary>
-	/// Word - класс, который служит для хранения всей информации о каждом слове
-	/// </summary>
-	public class Word
-	{
-		/// <summary>
-		/// Слово в нижнем регистре, которое хранится в объекте класса
-		/// </summary>
-		public string Value { get; }
+    /// <summary>
+    /// Word - класс, который служит для хранения всей информации о каждом слове
+    /// </summary>
+    public class Word
+    {
+        /// <summary>
+        /// Слово в нижнем регистре, которое хранится в объекте класса
+        /// </summary>
+        public string Value { get; }
+        
 
 		/// <summary>
 		/// Тип текущей записи (Фамилия/Имя/Отчество)
@@ -156,7 +157,9 @@
 		/// <returns>строка с нужным падежом текущего слова</returns>
 		public string GetNameCase(Padeg padeg)
 		{
-			return _nameCases[(int)padeg];
+            if (_nameCases!=null)
+                return _nameCases[(int)padeg];
+            return "";
 		}
 
 		/// <summary>
