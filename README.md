@@ -4,3 +4,6 @@
 
 Поддерживаются русский и украинский языки.
 Адрес сайта: http://namecaselib.com
+
+Установка с помощью NuGet:\
+`Install-Package NameCaseLib`
