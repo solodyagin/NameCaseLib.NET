@@ -15,7 +15,7 @@ namespace NameCaseLib
 		{
 			get
 			{
-				Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+				Version ver = Assembly.GetExecutingAssembly().GetName().Version;
 				return ver.ToString();
 			}
 		}
@@ -204,8 +204,8 @@ namespace NameCaseLib
 		{
 			if (gender != Gender.Null)
 			{
-				string rulesName = (gender == Gender.Man ? "Man" : "Woman");
-				Type classType = this.GetType();
+				string rulesName = gender == Gender.Man ? "Man" : "Woman";
+				Type classType = GetType();
 				for (int i = 0; i < rulesArray.Length; i++)
 				{
 					string methodName = string.Format("{0}Rule{1}", rulesName, rulesArray[i]);
@@ -489,7 +489,7 @@ namespace NameCaseLib
 			// Удаляем лишние пробелы
 			fullname = System.Text.RegularExpressions.Regex.Replace(fullname.Trim(), @"\s+", " ");
 			// Разбиваем на слова
-			string[] arr = fullname.Split(new Char[] { ' ' });
+			string[] arr = fullname.Split(' ');
 			_words = new WordArray();
 			for (int i = 0; i < arr.Length; i++)
 				_words.AddWord(new Word(arr[i]) { Position = i + 1 });
@@ -501,7 +501,7 @@ namespace NameCaseLib
 		/// <param name="word">Слово</param>
 		protected void WordCase(Word word)
 		{
-			string genderName = (word.Gender == Gender.Man ? "Man" : "Woman");
+			string genderName = word.Gender == Gender.Man ? "Man" : "Woman";
 
 			string fioPartName = "";
 			switch (word.FioPart)
@@ -514,7 +514,7 @@ namespace NameCaseLib
 			string methodName = genderName + fioPartName;
 			SetWorkingWord(word.Value);
 
-			bool res = (bool)this.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke(this, null);
+			bool res = (bool)GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance).Invoke(this, null);
 			if (res)
 			{
 				word.NameCases = lastResult;

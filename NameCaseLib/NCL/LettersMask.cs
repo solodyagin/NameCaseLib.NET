@@ -1,6 +1,6 @@
 ﻿namespace NameCaseLib
 {
-	enum LettersMask
+	internal enum LettersMask
 	{
 		x,
 		X

@@ -23,39 +23,39 @@ namespace NameCaseLib
 		/// <summary>
 		/// Список гласных украинского языка
 		/// </summary>
-		private string vowels = "аеиоуіїєюя";
+		private readonly string vowels = "аеиоуіїєюя";
 
 		/// <summary>
 		/// Список согласных украинского языка
 		/// </summary>
-		private string consonant = "бвгджзйклмнпрстфхцчшщ";
+		private readonly string consonant = "бвгджзйклмнпрстфхцчшщ";
 
 		/// <summary>
 		/// Українські шиплячі приголосні 
 		/// </summary>
-		private string shyplyachi = "жчшщ";
+		private readonly string shyplyachi = "жчшщ";
 
 		/// <summary>
 		/// Українські нешиплячі приголосні 
 		/// </summary>
-		private string neshyplyachi = "бвгдзклмнпрстфхц";
+		private readonly string neshyplyachi = "бвгдзклмнпрстфхц";
 
 		/// <summary>
 		/// Українські завжди м’які звуки 
 		/// </summary>
-		private string myaki = "ьюяєї";
+		private readonly string myaki = "ьюяєї";
 
 		/// <summary>
 		/// Українські губні звуки
 		/// </summary>
-		private string gubni = "мвпбф";
+		private readonly string gubni = "мвпбф";
 
 		/// <summary>
 		/// Создание текущего объекта
 		/// </summary>
 		public Ua()
 		{
-			base.caseCount = this.caseCount;
+			base.caseCount = caseCount;
 		}
 
 		/// <summary>
@@ -195,7 +195,7 @@ namespace NameCaseLib
 			// Останні літера або "а"
 			if (Last(1) == "а")
 			{
-				WordForms(workingWord, new string[] { beforeLast + "и", inverseGKH(beforeLast) + "і", beforeLast + "у", beforeLast + "ою", inverseGKH(beforeLast) + "і", beforeLast + "о" }, 2);
+				WordForms(workingWord, new[] { beforeLast + "и", inverseGKH(beforeLast) + "і", beforeLast + "у", beforeLast + "ою", inverseGKH(beforeLast) + "і", beforeLast + "о" }, 2);
 				Rule(101);
 				return true;
 			}
@@ -205,13 +205,13 @@ namespace NameCaseLib
 				// Перед останньою літерою стоїть я
 				if (beforeLast == "і")
 				{
-					WordForms(workingWord, new string[] { "ї", "ї", "ю", "єю", "ї", "є" }, 1);
+					WordForms(workingWord, new[] { "ї", "ї", "ю", "єю", "ї", "є" }, 1);
 					Rule(102);
 					return true;
 				}
 				else
 				{
-					WordForms(workingWord, new string[] { beforeLast + "і", inverseGKH(beforeLast) + "і", beforeLast + "ю", beforeLast + "ею", inverseGKH(beforeLast) + "і", beforeLast + "е" }, 2);
+					WordForms(workingWord, new[] { beforeLast + "і", inverseGKH(beforeLast) + "і", beforeLast + "ю", beforeLast + "ею", inverseGKH(beforeLast) + "і", beforeLast + "е" }, 2);
 					Rule(103);
 					return true;
 				}
@@ -228,9 +228,9 @@ namespace NameCaseLib
 		{
 			if (Last(1) == "р")
 			{
-				if (InNames(workingWord, new string[] { "ігор", "лазар" }))
+				if (InNames(workingWord, new[] { "ігор", "лазар" }))
 				{
-					WordForms(workingWord, new string[] { "я", "еві", "я", "ем", "еві", "е" });
+					WordForms(workingWord, new[] { "я", "еві", "я", "ем", "еві", "е" });
 					Rule(201);
 					return true;
 				}
@@ -239,10 +239,10 @@ namespace NameCaseLib
 					// Сидір
 					string osnova = workingWord;
 					// В украинском алфавите букве "і" соответсвует код Юникода = 0x0456
-					if (new[] { Char.ConvertFromUtf32(0x0456), "i" }.Contains(Last(osnova, 2, 1)))
+					if (new[] { char.ConvertFromUtf32(0x0456), "i" }.Contains(Last(osnova, 2, 1)))
 						osnova = osnova.Substring(0, osnova.Length - 2) + "о" + Last(osnova, 1);
-					//WordForms(osnova, new string[] { "а", "ові", "а", "ом", "ові", "е" });
-					WordForms(osnova, new string[] { "а", "у", "а", "ом", "і", "е" });
+					//WordForms(osnova, new[] { "а", "ові", "а", "ом", "ові", "е" });
+					WordForms(osnova, new[] { "а", "у", "а", "ом", "і", "е" });
 					Rule(202);
 					return true;
 				}
@@ -268,7 +268,7 @@ namespace NameCaseLib
 				// називному відмінку, у непрямих - "о": Антона, Антонові
 				// Чергування "і" -» "о" всередині
 				string osLast = Last(osnova, 1);
-				if (osLast != "й" && Last(osnova, 2, 1) == "і" && !In(Last(osnova, 4), new string[] { "світ", "цвіт" }) && !InNames(workingWord, "гліб") && !In(Last(2), new string[] { "ік", "іч" }))
+				if (osLast != "й" && Last(osnova, 2, 1) == "і" && !In(Last(osnova, 4), new[] { "світ", "цвіт" }) && !InNames(workingWord, "гліб") && !In(Last(2), new[] { "ік", "іч" }))
 					osnova = osnova.Substring(0, osnova.Length - 2) + "о" + Last(osnova, 1);
 
 				// Випадання букви "е" при відмінюванні слів типу Орел
@@ -277,7 +277,7 @@ namespace NameCaseLib
 				//	int delim = osnova.LastIndexOf("е");
 				//	osnova = osnova.Substring(0, delim) + osnova.Substring(delim + 1, osnova.Length - delim);
 				//}
-				if (InNames(workingWord, new string[] { "орел" }))
+				if (InNames(workingWord, new[] { "орел" }))
 				{
 					int delim = osnova.LastIndexOf("е");
 					osnova = osnova.Substring(0, delim) + osnova.Substring(delim + 1, osnova.Length - delim);
@@ -289,28 +289,28 @@ namespace NameCaseLib
 					// Слова що закінчуються на "ок"
 					if (Last(2) == "ок" && Last(3) != "оок")
 					{
-						WordForms(workingWord, new string[] { "ка", "кові", "ка", "ком", "кові", "че" }, 2);
+						WordForms(workingWord, new[] { "ка", "кові", "ка", "ком", "кові", "че" }, 2);
 						Rule(301);
 						return true;
 					}
 					// Російські прізвища на "ов", "ев", "єв"
-					else if (In(Last(2), new string[] { "ов", "ев", "єв" }) && !InNames(workingWord, new string[] { "лев", "остромов" }))
+					else if (In(Last(2), new[] { "ов", "ев", "єв" }) && !InNames(workingWord, new[] { "лев", "остромов" }))
 					{
-						WordForms(osnova, new string[] { osLast + "а", osLast + "у", osLast + "а", osLast + "им", osLast + "у", inverse2(osLast) + "е" }, 1);
+						WordForms(osnova, new[] { osLast + "а", osLast + "у", osLast + "а", osLast + "им", osLast + "у", inverse2(osLast) + "е" }, 1);
 						Rule(302);
 						return true;
 					}
 					// Російські прізвища на "ін"
-					else if (In(Last(2), new string[] { "ін" }))
+					else if (In(Last(2), new[] { "ін" }))
 					{
-						WordForms(workingWord, new string[] { "а", "у", "а", "ом", "у", "е" });
+						WordForms(workingWord, new[] { "а", "у", "а", "ом", "у", "е" });
 						Rule(303);
 						return true;
 					}
 					else
 					{
-						//WordForms(osnova, new string[] { osLast + "а", osLast + "ові", osLast + "а", osLast + "ом", osLast + "ові", inverse2(osLast) + "е" }, 1);
-						WordForms(osnova, new string[] { osLast + "а", osLast + "у", osLast + "а", osLast + "ом", osLast + "і", inverse2(osLast) + "е" }, 1);
+						//WordForms(osnova, new[] { osLast + "а", osLast + "ові", osLast + "а", osLast + "ом", osLast + "ові", inverse2(osLast) + "е" }, 1);
+						WordForms(osnova, new[] { osLast + "а", osLast + "у", osLast + "а", osLast + "ом", osLast + "і", inverse2(osLast) + "е" }, 1);
 						Rule(304);
 						return true;
 					}
@@ -318,7 +318,7 @@ namespace NameCaseLib
 				if (group == 2)
 				{
 					// Мішана група
-					WordForms(osnova, new string[] { "а", "еві", "а", "ем", "еві", "е" });
+					WordForms(osnova, new[] { "а", "еві", "а", "ем", "еві", "е" });
 					Rule(305);
 					return true;
 				}
@@ -329,40 +329,40 @@ namespace NameCaseLib
 					if (Last(2) == "ей" && In(Last(3, 1), gubni))
 					{
 						osnova = workingWord.Substring(0, workingWord.Length - 2) + "’";
-						WordForms(osnova, new string[] { "я", "єві", "я", "єм", "єві", "ю" });
+						WordForms(osnova, new[] { "я", "єві", "я", "єм", "єві", "ю" });
 						Rule(306);
 						return true;
 					}
 					else if (Last(1) == "й" || beforeLast == "і")
 					{
-						WordForms(workingWord, new string[] { "я", "єві", "я", "єм", "єві", "ю" }, 1);
+						WordForms(workingWord, new[] { "я", "єві", "я", "єм", "єві", "ю" }, 1);
 						Rule(307);
 						return true;
 					}
 					// Швець
 					else if (workingWord == "швець")
 					{
-						WordForms(workingWord, new string[] { "евця", "евцеві", "евця", "евцем", "евцеві", "евцю" }, 4);
+						WordForms(workingWord, new[] { "евця", "евцеві", "евця", "евцем", "евцеві", "евцю" }, 4);
 						Rule(308);
 						return true;
 					}
 					// Слова що закінчуються на "ець"
 					else if (Last(3) == "ець")
 					{
-						WordForms(workingWord, new string[] { "ця", "цеві", "ця", "цем", "цеві", "цю" }, 3);
+						WordForms(workingWord, new[] { "ця", "цеві", "ця", "цем", "цеві", "цю" }, 3);
 						Rule(309);
 						return true;
 					}
 					// Слова що закінчуються на "єць", "яць"
-					else if (In(Last(3), new string[] { "єць", "яць" }))
+					else if (In(Last(3), new[] { "єць", "яць" }))
 					{
-						WordForms(workingWord, new string[] { "йця", "йцеві", "йця", "йцем", "йцеві", "йцю" }, 3);
+						WordForms(workingWord, new[] { "йця", "йцеві", "йця", "йцем", "йцеві", "йцю" }, 3);
 						Rule(310);
 						return true;
 					}
 					else
 					{
-						WordForms(osnova, new string[] { "я", "еві", "я", "ем", "еві", "ю" });
+						WordForms(osnova, new[] { "я", "еві", "я", "ем", "еві", "ю" });
 						Rule(311);
 						return true;
 					}
@@ -379,7 +379,7 @@ namespace NameCaseLib
 		{
 			if (Last(1) == "і")
 			{
-				WordForms(workingWord, new string[] { "их", "им", "их", "ими", "их", "і" }, 1);
+				WordForms(workingWord, new[] { "их", "им", "их", "ими", "их", "і" }, 1);
 				Rule(4);
 				return true;
 			}
@@ -392,9 +392,9 @@ namespace NameCaseLib
 		/// <returns>true - якщо було задіяно правило з переліку, false - якщо правило не знайдено</returns> 
 		protected bool ManRule5()
 		{
-			if (In(Last(2), new string[] { "ий", "ой" }))
+			if (In(Last(2), new[] { "ий", "ой" }))
 			{
-				WordForms(workingWord, new string[] { "ого", "ому", "ого", "им", "ому", "ий" }, 2);
+				WordForms(workingWord, new[] { "ого", "ому", "ого", "им", "ому", "ий" }, 2);
 				Rule(5);
 				return true;
 			}
@@ -420,7 +420,7 @@ namespace NameCaseLib
 			if (Last(4) == "ніга")
 			{
 				string osnova = workingWord.Substring(0, workingWord.Length - 3) + "о";
-				WordForms(osnova, new string[] { "ги", "зі", "гу", "гою", "зі", "го" });
+				WordForms(osnova, new[] { "ги", "зі", "гу", "гою", "зі", "го" });
 				Rule(101);
 				return true;
 			}
@@ -428,7 +428,7 @@ namespace NameCaseLib
 			// Останні літера або "а"
 			else if (Last(1) == "а")
 			{
-				WordForms(workingWord, new string[] { beforeLast + "и", inverseGKH(beforeLast) + "і", beforeLast + "у", beforeLast + "ою", inverseGKH(beforeLast) + "і", beforeLast + "о" }, 2);
+				WordForms(workingWord, new[] { beforeLast + "и", inverseGKH(beforeLast) + "і", beforeLast + "у", beforeLast + "ою", inverseGKH(beforeLast) + "і", beforeLast + "о" }, 2);
 				Rule(102);
 				return true;
 			}
@@ -437,13 +437,13 @@ namespace NameCaseLib
 			{
 				if (In(beforeLast, vowels) || isApostrof(beforeLast))
 				{
-					WordForms(workingWord, new string[] { "ї", "ї", "ю", "єю", "ї", "є" }, 1);
+					WordForms(workingWord, new[] { "ї", "ї", "ю", "єю", "ї", "є" }, 1);
 					Rule(103);
 					return true;
 				}
 				else
 				{
-					WordForms(workingWord, new string[] { beforeLast + "і", inverseGKH(beforeLast) + "і", beforeLast + "ю", beforeLast + "ею", inverseGKH(beforeLast) + "і", beforeLast + "е" }, 2);
+					WordForms(workingWord, new[] { beforeLast + "і", inverseGKH(beforeLast) + "і", beforeLast + "ю", beforeLast + "ею", inverseGKH(beforeLast) + "і", beforeLast + "е" }, 2);
 					Rule(104);
 					return true;
 				}
@@ -477,13 +477,13 @@ namespace NameCaseLib
 				// Відмінюємо
 				if (Last(1) == "ь")
 				{
-					WordForms(osnova, new string[] { "і", "і", "ь", duplicate + apostrof + "ю", "і", "е" });
+					WordForms(osnova, new[] { "і", "і", "ь", duplicate + apostrof + "ю", "і", "е" });
 					Rule(201);
 					return true;
 				}
 				else
 				{
-					WordForms(osnova, new string[] { "і", "і", "", duplicate + apostrof + "ю", "і", "е" });
+					WordForms(osnova, new[] { "і", "і", "", duplicate + apostrof + "ю", "і", "е" });
 					Rule(202);
 					return true;
 				}
@@ -503,15 +503,15 @@ namespace NameCaseLib
 			// Донская
 			if (Last(2) == "ая")
 			{
-				WordForms(workingWord, new string[] { "ої", "ій", "ую", "ою", "ій", "ая" }, 2);
+				WordForms(workingWord, new[] { "ої", "ій", "ую", "ою", "ій", "ая" }, 2);
 				Rule(301);
 				return true;
 			}
 
 			// Ті що на ськ
-			if (Last(1) == "а" && (In(Last(2, 1), "чнв") || In(Last(3, 2), new string[] { "ьк" })))
+			if (Last(1) == "а" && (In(Last(2, 1), "чнв") || In(Last(3, 2), new[] { "ьк" })))
 			{
-				WordForms(workingWord, new string[] { beforeLast + "ої", beforeLast + "ій", beforeLast + "у", beforeLast + "ою", beforeLast + "ій", beforeLast + "о" }, 2);
+				WordForms(workingWord, new[] { beforeLast + "ої", beforeLast + "ій", beforeLast + "у", beforeLast + "ою", beforeLast + "ій", beforeLast + "о" }, 2);
 				Rule(302);
 				return true;
 			}
@@ -561,9 +561,9 @@ namespace NameCaseLib
 		/// <returns>true - якщо слово успішно змінене, false - якщо невдалося провідміняти слово</returns>
 		protected override bool ManPatrName()
 		{
-			if (In(Last(2), new string[] { "ич", "іч" }))
+			if (In(Last(2), new[] { "ич", "іч" }))
 			{
-				WordForms(workingWord, new string[] { "а", "у", "а", "ем", "у", "у" });
+				WordForms(workingWord, new[] { "а", "у", "а", "ем", "у", "у" });
 				return true;
 			}
 			return false;
@@ -575,9 +575,9 @@ namespace NameCaseLib
 		/// <returns>true - якщо слово успішно змінене, false - якщо невдалося провідміняти слово</returns>
 		protected override bool WomanPatrName()
 		{
-			if (In(Last(3), new string[] { "вна" }))
+			if (In(Last(3), new[] { "вна" }))
 			{
-				WordForms(workingWord, new string[] { "и", "і", "у", "ою", "і", "о" }, 1);
+				WordForms(workingWord, new[] { "и", "і", "у", "ою", "і", "о" }, 1);
 				return true;
 			}
 			return false;
@@ -597,13 +597,13 @@ namespace NameCaseLib
 			if (Last(1) == "й")
 				prob.Man += 0.9f;
 
-			if (InNames(workingWord, new string[] { "петро", "микола" }))
+			if (InNames(workingWord, new[] { "петро", "микола" }))
 				prob.Man += 30;
 
-			if (In(Last(2), new string[] { "он", "ов", "ав", "ам", "ол", "ан", "рд", "мп", "ко", "ло" }))
+			if (In(Last(2), new[] { "он", "ов", "ав", "ам", "ол", "ан", "рд", "мп", "ко", "ло" }))
 				prob.Man += 0.5f;
 
-			if (In(Last(3), new string[] { "бов", "нка", "яра", "ила", "опа" }))
+			if (In(Last(3), new[] { "бов", "нка", "яра", "ила", "опа" }))
 				prob.Woman += 0.5f;
 
 			if (In(Last(1), consonant))
@@ -612,10 +612,10 @@ namespace NameCaseLib
 			if (Last(1) == "ь")
 				prob.Man += 0.02f;
 
-			if (In(Last(2), new string[] { "дь" }))
+			if (In(Last(2), new[] { "дь" }))
 				prob.Woman += 0.1f;
 
-			if (In(Last(3), new string[] { "ель", "бов" }))
+			if (In(Last(3), new[] { "ель", "бов" }))
 				prob.Woman += 0.4f;
 
 			word.GenderProbability = prob;
@@ -630,13 +630,13 @@ namespace NameCaseLib
 			SetWorkingWord(word.Value);
 			GenderProbability prob = new GenderProbability();
 
-			if (In(Last(2), new string[] { "ов", "ин", "ев", "єв", "ін", "їн", "ий", "їв", "ів", "ой", "ей" }))
+			if (In(Last(2), new[] { "ов", "ин", "ев", "єв", "ін", "їн", "ий", "їв", "ів", "ой", "ей" }))
 				prob.Man += 0.4f;
 
-			if (In(Last(3), new string[] { "ова", "ина", "ева", "єва", "іна", "мін" }))
+			if (In(Last(3), new[] { "ова", "ина", "ева", "єва", "іна", "мін" }))
 				prob.Woman += 0.4f;
 
-			if (In(Last(2), new string[] { "ая" }))
+			if (In(Last(2), new[] { "ая" }))
 				prob.Woman += 0.4f;
 
 			word.GenderProbability = prob;
@@ -671,25 +671,25 @@ namespace NameCaseLib
 			float patr = 0;
 
 			// Если смахивает на отчество
-			if (In(Last(3), new string[] { "вна", "чна", "ліч" }) || In(Last(4), new string[] { "ьмич", "ович" }))
+			if (In(Last(3), new[] { "вна", "чна", "ліч" }) || In(Last(4), new[] { "ьмич", "ович" }))
 				patr += 3;
 
 			// Похоже на имя
-			if (In(Last(3), new string[] { "тин" }) || In(Last(4), new string[] { "ьмич", "юбов", "івна", "явка", "орив", "кіян" }))
+			if (In(Last(3), new[] { "тин" }) || In(Last(4), new[] { "ьмич", "юбов", "івна", "явка", "орив", "кіян" }))
 				first += 0.5f;
 
 			// Исключения
-			if (InNames(word.Value, new string[] { "лев", "гаїна", "афіна", "антоніна", "ангеліна", "альвіна", "альбіна", "аліна", "павло", "олесь", "микола", "мая", "англеліна", "елькін", "мерлін" }))
+			if (InNames(word.Value, new[] { "лев", "гаїна", "афіна", "антоніна", "ангеліна", "альвіна", "альбіна", "аліна", "павло", "олесь", "микола", "мая", "англеліна", "елькін", "мерлін" }))
 				first += 10;
 
 			// Похоже на фамилию
-			if (In(Last(2), new string[] { "ов", "ін", "ев", "єв", "ий", "ин", "ой", "ко", "ук", "як", "ца", "их", "ик", "ун", "ок", "ша", "ая", "га", "єк", "аш", "ив", "юк", "ус", "це", "ак", "бр", "яр", "іл", "ів", "ич", "сь", "ей", "нс", "яс", "ер", "ай", "ян", "ах", "ць", "ющ", "іс", "ач", "уб", "ох", "юх", "ут", "ча", "ул", "вк", "зь", "уц", "їн", "де", "уз", "юр", "ік", "іч", "ро" }))
+			if (In(Last(2), new[] { "ов", "ін", "ев", "єв", "ий", "ин", "ой", "ко", "ук", "як", "ца", "их", "ик", "ун", "ок", "ша", "ая", "га", "єк", "аш", "ив", "юк", "ус", "це", "ак", "бр", "яр", "іл", "ів", "ич", "сь", "ей", "нс", "яс", "ер", "ай", "ян", "ах", "ць", "ющ", "іс", "ач", "уб", "ох", "юх", "ут", "ча", "ул", "вк", "зь", "уц", "їн", "де", "уз", "юр", "ік", "іч", "ро" }))
 				surname += 0.4f;
 
-			if (In(Last(3), new string[] { "ова", "ева", "єва", "тих", "рик", "вач", "аха", "шен", "мей", "арь", "вка", "шир", "бан", "чий", "іна", "їна", "ька", "ань", "ива", "аль", "ура", "ран", "ало", "ола", "кур", "оба", "оль", "нта", "зій", "ґан", "іло", "шта", "юпа", "рна", "бла", "еїн", "има", "мар", "кар", "оха", "чур", "ниш", "ета", "тна", "зур", "нір", "йма", "орж", "рба", "іла", "лас", "дід", "роз", "аба", "чан", "ган" }))
+			if (In(Last(3), new[] { "ова", "ева", "єва", "тих", "рик", "вач", "аха", "шен", "мей", "арь", "вка", "шир", "бан", "чий", "іна", "їна", "ька", "ань", "ива", "аль", "ура", "ран", "ало", "ола", "кур", "оба", "оль", "нта", "зій", "ґан", "іло", "шта", "юпа", "рна", "бла", "еїн", "има", "мар", "кар", "оха", "чур", "ниш", "ета", "тна", "зур", "нір", "йма", "орж", "рба", "іла", "лас", "дід", "роз", "аба", "чан", "ган" }))
 				surname += 0.4f;
 
-			if (In(Last(4), new string[] { "ьник", "нчук", "тник", "кирь", "ский", "шена", "шина", "вина", "нина", "гана", "гана", "хній", "зюба", "орош", "орон", "сило", "руба", "лест", "мара", "обка", "рока", "сика", "одна", "нчар", "вата", "ндар", "грій" }))
+			if (In(Last(4), new[] { "ьник", "нчук", "тник", "кирь", "ский", "шена", "шина", "вина", "нина", "гана", "гана", "хній", "зюба", "орош", "орон", "сило", "руба", "лест", "мара", "обка", "рока", "сика", "одна", "нчар", "вата", "ндар", "грій" }))
 				surname += 0.4f;
 
 			if (Last(1) == "і")

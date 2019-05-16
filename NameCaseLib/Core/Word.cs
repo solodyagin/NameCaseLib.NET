@@ -1,15 +1,14 @@
 ﻿namespace NameCaseLib
 {
-    /// <summary>
-    /// Word - класс, который служит для хранения всей информации о каждом слове
-    /// </summary>
-    public class Word
-    {
-        /// <summary>
-        /// Слово в нижнем регистре, которое хранится в объекте класса
-        /// </summary>
-        public string Value { get; }
-        
+	/// <summary>
+	/// Word - класс, который служит для хранения всей информации о каждом слове
+	/// </summary>
+	public class Word
+	{
+		/// <summary>
+		/// Слово в нижнем регистре, которое хранится в объекте класса
+		/// </summary>
+		public readonly string Value;
 
 		/// <summary>
 		/// Тип текущей записи (Фамилия/Имя/Отчество)
@@ -62,7 +61,7 @@
 		public Word(string value)
 		{
 			GenerateMask(value);
-			this.Value = value.ToLower();
+			Value = value.ToLower();
 		}
 
 		/// <summary>
@@ -127,10 +126,7 @@
 				_nameCases = value;
 				ReturnMask();
 			}
-			get
-			{
-				return _nameCases;
-			}
+			get => _nameCases;
 		}
 
 		/// <summary>
@@ -141,13 +137,10 @@
 			get
 			{
 				if (_genderSolved == Gender.Null)
-					_genderSolved = (GenderProbability.Man > GenderProbability.Woman) ? Gender.Man : Gender.Woman;
+					_genderSolved = GenderProbability.Man > GenderProbability.Woman ? Gender.Man : Gender.Woman;
 				return _genderSolved;
 			}
-			set
-			{
-				_genderSolved = value;
-			}
+			set => _genderSolved = value;
 		}
 
 		/// <summary>
@@ -157,9 +150,7 @@
 		/// <returns>строка с нужным падежом текущего слова</returns>
 		public string GetNameCase(Padeg padeg)
 		{
-            if (_nameCases!=null)
-                return _nameCases[(int)padeg];
-            return "";
+			return _nameCases != null ? _nameCases[(int)padeg] : "";
 		}
 
 		/// <summary>
