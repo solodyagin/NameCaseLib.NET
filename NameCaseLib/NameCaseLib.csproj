@@ -1,8 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
+    <Authors>Andriy Chaika</Authors>
+    <PackageLicenseUrl>https://github.com/seagullua/NameCaseLib.NET/blob/master/MIT-LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright ©  2011</Copyright>
+    <Description>Библиотека NameCaseLib склонения ФИО для .NET</Description>
     <Version>0.4.2</Version>
+    <PackageProjectUrl>https://github.com/seagullua/NameCaseLib.NET</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
